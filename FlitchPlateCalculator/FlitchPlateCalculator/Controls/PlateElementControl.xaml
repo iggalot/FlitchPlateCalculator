@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="FlitchPlateCalculator.Controls.PlateElementControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:FlitchPlateCalculator.Controls"
+             mc:Ignorable="d"
+             Loaded="OnPlateControlLoaded"
+             >
+    <StackPanel Orientation="Horizontal" Background="AntiqueWhite">
+        <Label Content="Qty: " Height="30"/>
+        <TextBox Text="{Binding Path=Qty, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
+
+        <Label Content="Grade: " Height="30"/>
+        <TextBox Text="{Binding Path=PlateMaterialType, Mode=OneWay}" Height="30" Width="170" BorderThickness="0" VerticalAlignment="Center"/>
+        <Label Content="in." Height="30"/>
+
+        <Label Content="W: " Height="30"/>
+        <TextBox Text="{Binding Path=PlateWidth, Mode=OneWay}" Height="30" Width="40" BorderThickness="0" VerticalAlignment="Center"/>
+        <Label Content="in." Height="30"/>
+
+        <Label Content="H:" Height="30"/>
+        <TextBox Text="{Binding Path=PlateHeight, Mode=OneWay}" Height="30" Width="40" BorderThickness="0" VerticalAlignment="Center"/>
+        <Label Content="in." Height="30"/>
+
+        <Label Content="Xi" Height="30"/>
+        <TextBox Text="{Binding Path=Centroid_X, Mode=OneWay}" Height="30" Width="60" BorderThickness="0" VerticalAlignment="Center"/>
+        <Label Content="in." Height="30"/>
+
+        <Label Content="Yi" Height="30"/>
+        <TextBox Text="{Binding Path=Centroid_Y, Mode=OneWay}" Height="30" Width="60" BorderThickness="0" VerticalAlignment="Center"/>
+        <Label Content="in." Height="30"/>
+
+        <Button Content="Rotate Plate" Click="Button_RotateClick"></Button>
+        <Button Content="Edit" Height="30" Width="40" HorizontalAlignment="Right"/>
+        <Button Content="Delete" Height="30" Width="40" HorizontalAlignment="Right"/>
+    </StackPanel>
+</UserControl>

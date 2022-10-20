@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:FlitchPlateCalculator"
         mc:Ignorable="d"
         Title="Flitch Plate Calculator v1.0"
-        SizeToContent="WidthAndHeight">
+        SizeToContent="WidthAndHeight"
+        Loaded="OnWindowLoaded">
     <Grid>
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
@@ -15,30 +16,41 @@
                     <StackPanel Orientation="Vertical" Background="LightBlue">
                         <StackPanel Orientation="Horizontal" >
                             <Label Content="Steel" FontSize="24" FontWeight="Bold"/>
-                            <ListBox Height="80" Width="100" d:ItemsSource="{d:SampleData ItemCount=5}"/>
+
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" >
+                            <ComboBox Name="cmbSteelGrade" Margin="5" Width="90" HorizontalAlignment="Center"  SelectionChanged="cmbSelectionChanged"/>
+
                             <Label Content="Qty" Height="28" Width="80"/>
-                            <TextBox Height="28" Text="TextBox" Width="100"/>
+                            <ComboBox Name="cmbSteelQty" Margin="5" Width="90" HorizontalAlignment="Center"  SelectionChanged="cmbSelectionChanged"/>
 
                             <Label Content="Type" Height="40" Width="40"/>
-                            <ListBox Height="80" Width="100" d:ItemsSource="{d:SampleData ItemCount=5}"/>
-
-                            <Label Content="Height" Height="28" Width="80"/>
-                            <TextBox Height="28" Text="TextBox" Width="100"/>
+                            <ComboBox Name="cmbSteelThickness" Margin="5" Width="90" HorizontalAlignment="Center"  SelectionChanged="cmbSelectionChanged"/>
 
                             <Label Content="Width" Height="28" Width="80"/>
-                            <TextBox Height="28" Text="TextBox" Width="100"/>
+                            <TextBlock Height="28" Text="stl width" Width="100"/>
+                            
+                            <Label Content="Height" Height="28" Width="80"/>
+                            <TextBox Height="28" Text="stl ht" Width="100"/>
+
+                            
+
+
+                            
+                            <Button Content="Add" Width="40" Height="28"/>
 
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" >
                             <Label Content="Fb" Height="28" Width="80"/>
-                            <TextBlock Height="24" Text="TextBox" Width="100"/>
+                            <TextBlock Height="24" Text="steel fb" Width="100"/>
                             <Label Content="E" Height="28" Width="80"/>
-                            <TextBlock Height="24" Text="TextBox" Width="100"/>
+                            <TextBlock Height="24" Text="steel E" Width="100"/>
                         </StackPanel>
-                        <TextBlock Background="White" Margin="5" HorizontalAlignment="Center" Height="100" Text="TextBlock" Width="600"/>
+                        
+                        <StackPanel Name ="spSteelControls"/>
+                        
+                        <TextBlock Background="White" Margin="5" HorizontalAlignment="Center" Height="100" Text="STEEL STATUS NOTES" Width="600"/>
                     </StackPanel>
 
                     <!--Wood-->
@@ -46,11 +58,12 @@
                         <StackPanel Orientation ="Vertical" Background="LightGreen">
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="Wood" FontSize="24" FontWeight="Bold"/>
-                                <ListBox Height="80" Width="100" d:ItemsSource="{d:SampleData ItemCount=5}"/>
+                                <ComboBox Name="cmbWoodGrade" Margin="5" Width="90" HorizontalAlignment="Center"  SelectionChanged="cmbSelectionChanged"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <Label Content="Qty" Height="40"  Width="40"/>
-                                <ListBox Height="80" Width="100" d:ItemsSource="{d:SampleData ItemCount=5}"/>
+                                <Label Content="Qty" Height="28"  Width="80"/>
+                                <ComboBox Name="cmbWoodQty" Margin="5" Width="90" HorizontalAlignment="Center"  SelectionChanged="cmbSelectionChanged"/>
+
 
                                 <Label Content="Type" Height="40" Width="40"/>
                                 <ListBox Height="80" Width="100" d:ItemsSource="{d:SampleData ItemCount=5}"/>
@@ -59,29 +72,65 @@
                                 <TextBox Height="28" Text="TextBox" Width="100"/>
 
                                 <Label Content="Width" Height="28" Width="80"/>
-                                <TextBox Height="28" Text="TextBox" Width="100"/>
+                                <TextBox Height="28" Text="wood ht" Width="100"/>
+
+                                <Button Content="Add" Width="40" Height="28"/>
+
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" >
                                 <Label Content="Fb" Height="28" Width="80"/>
-                                <TextBox Height="24" Text="TextBox" Width="100"/>
+                                <TextBlock Height="24" Text="wood fb" Width="100"/>
                                 <Label Content="E" Height="28" Width="80"/>
-                                <TextBox Height="24" Text="TextBox" Width="100"/>
+                                <TextBlock Height="24" Text="wood fb" Width="100"/>
                             </StackPanel>
-                            <TextBlock Background="White" Margin="5" HorizontalAlignment="Center" Height="100" Text="TextBlock" Width="600"/>
+                            <TextBlock Background="White" Margin="5" HorizontalAlignment="Center" Height="100" Text="WOOD STATUS NOTES" Width="600"/>
                         </StackPanel>
 
                     </StackPanel>
                 </StackPanel>
-                <Canvas Name="MainCanvas" Background="LightGray" Width="650" Height="650"/>
+                <Canvas Name="MainCanvas" Background="LightGray" Width="550" Height="550"/>
+
             </StackPanel>
             <!--Results-->
-            <StackPanel Orientation="Vertical">
-                <TextBlock Background="White" Margin="5" Height="100" Text="TextBlock" Width="600"/>
-                <StackPanel Orientation="Horizontal">
-                    <Button Content="Calculate" Height="36" Margin="10" Width="80"/>
-                    <Button Content="Button" Height="36" Margin="10" Width="80"/>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Weight = "/>
+                <TextBox Text="{Binding Path=Weight, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
+                <Label Content="lb / ft"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Vertical">
+                    <Label Content="Untransformed (gross)" FontSize="18" FontWeight="Bold"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Centroid (Xc, Yc) = ("/>
+                        <TextBox Text="{Binding Path=Centroid_X_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
+                        <Label Content=","/>
+                        <TextBox Text="{Binding Path=Centroid_Y_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
+                        <Label Content=") in."/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Area = "/>
+                        <TextBox Text="{Binding Path=Area_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
+                        <Label Content="sq. in."/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Ix = "/>
+                        <TextBox Text="{Binding Path=Ix_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
+                        <Label Content="in^4."/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="Iy = "/>
+                        <TextBox Text="{Binding Path=Iy_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
+                        <Label Content="in^4."/>
+                    </StackPanel>
+                    <TextBlock Name="tb_UIStatusBar" Background="BlanchedAlmond" Margin="5" Height="100" Text="UI STATUS BAR" Width="600"/>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="Calculate" Height="36" Margin="10" Width="80"/>
+                        <Button Content="Button" Height="36" Margin="10" Width="80"/>
+                    </StackPanel>
                 </StackPanel>
             </StackPanel>
+
         </StackPanel>
     </Grid>
 </Window>

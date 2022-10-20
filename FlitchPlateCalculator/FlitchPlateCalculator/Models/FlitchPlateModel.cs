@@ -140,6 +140,10 @@ namespace FlitchPlateCalculator.Models
 
             return;
         }
+        public void Update()
+        {
+            UpdateCalculations();
+        }
 
         public override string ToString()
         {

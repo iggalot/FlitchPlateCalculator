@@ -91,6 +91,15 @@ namespace FlitchPlateCalculator.Models
             }
         }
 
+        public void RotatePlate()
+        {
+            double temp;
+            temp = Width;
+            Width = Height;
+            Height = temp;
+
+        }
+
         public override string ToString()
         {
             string str = "";
