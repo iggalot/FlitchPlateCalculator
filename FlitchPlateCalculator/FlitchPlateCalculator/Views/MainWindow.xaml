@@ -22,6 +22,9 @@
                             <Label Content="Qty" Height="28" Width="80"/>
                             <TextBox Height="28" Text="TextBox" Width="100"/>
 
+                            <Label Content="Type" Height="40" Width="40"/>
+                            <ListBox Height="80" Width="100" d:ItemsSource="{d:SampleData ItemCount=5}"/>
+
                             <Label Content="Height" Height="28" Width="80"/>
                             <TextBox Height="28" Text="TextBox" Width="100"/>
 
@@ -69,7 +72,7 @@
 
                     </StackPanel>
                 </StackPanel>
-                <Canvas Background="LightGray" Width="600"/>
+                <Canvas Name="MainCanvas" Background="LightGray" Width="650" Height="650"/>
             </StackPanel>
             <!--Results-->
             <StackPanel Orientation="Vertical">
