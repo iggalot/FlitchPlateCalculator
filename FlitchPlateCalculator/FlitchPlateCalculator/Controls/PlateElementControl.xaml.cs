@@ -288,7 +288,6 @@ namespace FlitchPlateCalculator.Controls
             bool isValid = true;
 
             double width = 0, height = 0, xi = 0, yi = 0;
-            int  qty = 0;
             MaterialTypes material_type = MaterialTypes.MATERIAL_UNDEFINED;
 
             double result;

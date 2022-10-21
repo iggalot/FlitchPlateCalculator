@@ -14,16 +14,15 @@
         <Label Content="Grade: " Height="30"/>
         <TextBlock Name="tblk_Grade" Text="{Binding Path=PlateMaterialType, Mode=OneWay}" Height="30" Width="170" VerticalAlignment="Center"/>
         <ComboBox Name="cmbGrade" Margin="5" Width="170" HorizontalAlignment="Center" Visibility="Collapsed"/>
-        <Label Content="in." Height="30"/>
 
         <Label Content="W: " Height="30"/>
         <TextBlock Name="tblk_Width" Text="{Binding Path=PlateWidth, Mode=OneWay}" Height="30" Width="30" VerticalAlignment="Center"/>
-        <TextBox Name="tb_Width" Text="{Binding Path=PlateWidth, Mode=OneWay}" Visibility="Collapsed" Height="30" Width="30" BorderThickness="0" VerticalAlignment="Center"/>
+        <TextBox Name="tb_Width" Text="{Binding Path=PlateWidth, Mode=OneWay}" Visibility="Collapsed" Height="30" Width="35" BorderThickness="0" VerticalAlignment="Center"/>
         <Label Content="in." Height="30"/>
 
         <Label Content="H:" Height="30"/>
-        <TextBlock Name="tblk_Height" Text="{Binding Path=PlateHeight, Mode=OneWay}" Height="30" Width="30" VerticalAlignment="Center"/>
-        <TextBox Name="tb_Height" Text="{Binding Path=PlateHeight, Mode=OneWay}" Visibility="Collapsed" Height="30" Width="30" BorderThickness="0" VerticalAlignment="Center"/>
+        <TextBlock Name="tblk_Height" Text="{Binding Path=PlateHeight, Mode=OneWay}" Height="30" Width="35" VerticalAlignment="Center"/>
+        <TextBox Name="tb_Height" Text="{Binding Path=PlateHeight, Mode=OneWay}" Visibility="Collapsed" Height="30" Width="35" BorderThickness="0" VerticalAlignment="Center"/>
         <Label Content="in." Height="30"/>
 
         <Label Content="Xi" Height="30"/>

@@ -16,7 +16,6 @@ namespace FlitchPlateCalculator.Views
     public partial class MainWindow : Window
     {
         private bool bWindowFinishedLoading = false;
-        private bool bFirstLoad = true;
 
         public FlitchPlateViewModel FlitchPlateVM { get; set; }
         public FlitchPlateModel Model { get; set; } = new FlitchPlateModel();
@@ -35,8 +34,8 @@ namespace FlitchPlateCalculator.Views
             InitializeComponent();
 
             // Load test model
-            //Model = W8x31Test();
-            Model = MultiMaterialTest();
+            Model = W8x31Test();
+            //Model = MultiMaterialTest();
 
             tb_UIStatusBar.Text = Model.ToString();
 
@@ -53,7 +52,6 @@ namespace FlitchPlateCalculator.Views
         private void OnUserCreate()
         {
             CreateUI(this);
-            bFirstLoad = true;
         }
 
         /// <summary>
@@ -65,7 +63,6 @@ namespace FlitchPlateCalculator.Views
         {
             bWindowFinishedLoading = true;
             Update(); // run the calculations for the current data set
-            bFirstLoad = false;
         }
 
         /// <summary>

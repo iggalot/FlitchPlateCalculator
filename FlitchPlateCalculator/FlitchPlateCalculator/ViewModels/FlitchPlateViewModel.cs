@@ -13,11 +13,11 @@ namespace FlitchPlateCalculator.ViewModels
         public FlitchPlateModel Model { get; set; }
         public Canvas FPCanvas { get; set; }
 
-        // Minimum extents of the bounding box
-        public Point BB_p1_WORLD { get; set; }
+        //// Minimum extents of the bounding box
+        //public Point BB_p1_WORLD { get; set; }
 
-        // Minimum extents of the bounding box
-        public Point BB_p2_WORLD { get; set; }
+        //// Minimum extents of the bounding box
+        //public Point BB_p2_WORLD { get; set; }
 
         // Minimum extents of the bounding box
         public Point BB_p1_SCREEN { get; set; }
@@ -34,13 +34,25 @@ namespace FlitchPlateCalculator.ViewModels
         public double Ix_Untr { get => Model.Ix_Untr; }
         public double Iy_Untr { get => Model.Iy_Untr; }
 
+        public double Zx_Untr { get => Model.Zx_Untr; }
+        public double Zy_Untr { get => Model.Zy_Untr; }
+
+        public double rx_Untr { get => Model.rx_Untr; }
+        public double ry_Untr { get => Model.ry_Untr; }
+
+        public double Sx_Top_Untr { get => Model.Sx_Top_Untr; }
+        public double Sx_Bot_Untr { get => Model.Sx_Bot_Untr; }
+        public double Sy_Left_Untr { get => Model.Sy_Left_Untr; }
+        public double Sy_Right_Untr { get => Model.Sy_Right_Untr; }
+
+
         public double Centroid_X_Untr { get => Model.Centroid_Untransformed.X; }
         public double Centroid_Y_Untr { get => Model.Centroid_Untransformed.Y; }
 
-        public double HOR_TOP { get => Math.Round(BB_p2_WORLD.Y, 3); }
-        public double HOR_BOTTOM { get => Math.Round(BB_p1_WORLD.Y, 3); }
-        public double VER_LEFT { get => Math.Round(BB_p1_WORLD.X, 3); }
-        public double VER_RIGHT { get => Math.Round(BB_p2_WORLD.X, 3); }
+        public double HOR_TOP { get => Math.Round(Model.BB_p2_WORLD.Y, 3); }
+        public double HOR_BOTTOM { get => Math.Round(Model.BB_p1_WORLD.Y, 3); }
+        public double VER_LEFT { get => Math.Round(Model.BB_p1_WORLD.X, 3); }
+        public double VER_RIGHT { get => Math.Round(Model.BB_p2_WORLD.X, 3); }
 
 
 
@@ -173,8 +185,8 @@ namespace FlitchPlateCalculator.ViewModels
         private void ComputeScaleFactor()
         {
             // determine the scale factor
-            double scale_x = 0.5 * FPCanvas.Width / (BB_p2_WORLD.X - BB_p1_WORLD.X);
-            double scale_y = 0.5 * FPCanvas.Height / (BB_p2_WORLD.Y - BB_p1_WORLD.Y);
+            double scale_x = 0.5 * FPCanvas.Width / (Model.BB_p2_WORLD.X - Model.BB_p1_WORLD.X);
+            double scale_y = 0.5 * FPCanvas.Height / (Model.BB_p2_WORLD.Y - Model.BB_p1_WORLD.Y);
 
             CANVAS_SCALE = scale_x < scale_y ? scale_x : scale_y;
         }
@@ -204,42 +216,6 @@ namespace FlitchPlateCalculator.ViewModels
             }
         }
 
-        /// <summary>
-        /// Find the extreme limits of the objects in world space
-        /// </summary>
-        private void FindBoundingBox_Untransformed_World()
-        {
-            double min_x = 0;
-            double min_y = 0;
-            double max_x = 0;
-            double max_y = 0;
-
-            foreach (PlateModel plate in Model.Plates)
-            {
-                if (plate.Centroid.X - 0.5 * plate.Width < min_x)
-                {
-                    min_x = plate.Centroid.X - 0.5 * plate.Width;
-                }
-
-                if (plate.Centroid.Y - 0.5 * plate.Height < min_y)
-                {
-                    min_y = plate.Centroid.Y - 0.5 * plate.Height;
-                }
-
-                if (plate.Centroid.X + 0.5 * plate.Width > max_x)
-                {
-                    max_x = plate.Centroid.X + 0.5 * plate.Width;
-                }
-
-                if (plate.Centroid.Y + 0.5 * plate.Height > max_y)
-                {
-                    max_y = plate.Centroid.Y + 0.5 * plate.Height;
-                }
-            }
-
-            BB_p1_WORLD = new Point(min_x, min_y);
-            BB_p2_WORLD = new Point(max_x, max_y);
-        }
 
         /// <summary>
         /// Find the corresponding limits of the world bounding box on the canvas screen
@@ -247,11 +223,11 @@ namespace FlitchPlateCalculator.ViewModels
         /// <param name="c"></param>
         private void FindBoundingBox_Untransformed_Screen()
         {
-            double p1_x = BB_p1_WORLD.X * CANVAS_SCALE + 0.5 * FPCanvas.Width;
-            double p1_y = 0.5 * FPCanvas.Height - BB_p1_WORLD.Y * CANVAS_SCALE;
+            double p1_x = Model.BB_p1_WORLD.X * CANVAS_SCALE + 0.5 * FPCanvas.Width;
+            double p1_y = 0.5 * FPCanvas.Height - Model.BB_p1_WORLD.Y * CANVAS_SCALE;
 
-            double p2_x = BB_p2_WORLD.X * CANVAS_SCALE + 0.5 * FPCanvas.Width;
-            double p2_y = 0.5 * FPCanvas.Height - BB_p2_WORLD.Y * CANVAS_SCALE;
+            double p2_x = Model.BB_p2_WORLD.X * CANVAS_SCALE + 0.5 * FPCanvas.Width;
+            double p2_y = 0.5 * FPCanvas.Height - Model.BB_p2_WORLD.Y * CANVAS_SCALE;
 
             BB_p1_SCREEN = new Point(p1_x, p1_y);
             BB_p2_SCREEN = new Point(p2_x, p2_y);
@@ -268,13 +244,19 @@ namespace FlitchPlateCalculator.ViewModels
             OnPropertyChanged("Iy_Untr");
             OnPropertyChanged("Centroid_X_Untr");
             OnPropertyChanged("Centroid_Y_Untr");
+            OnPropertyChanged("Zx_Untr");
+            OnPropertyChanged("Zy_Untr");
+            OnPropertyChanged("rx_Untr");
+            OnPropertyChanged("ry_Untr");
+            OnPropertyChanged("Sx_Left_Untr");
+            OnPropertyChanged("Sx_Right_Untr");
+            OnPropertyChanged("Sy_Top_Untr");
+            OnPropertyChanged("Sy_Right_Untr");
 
             OnPropertyChanged("HOR_TOP");
             OnPropertyChanged("HOR_BOTTOM");
             OnPropertyChanged("VER_LEFT");
             OnPropertyChanged("VER_RIGHT");
-
-
         }
 
         /// <summary>
@@ -283,7 +265,7 @@ namespace FlitchPlateCalculator.ViewModels
         private void UpdateViewFactors()
         {
             // Find drawing parameters
-            FindBoundingBox_Untransformed_World();
+            Model.FindBoundingBox_Untransformed_World();
             ComputeScaleFactor();
             FindBoundingBox_Untransformed_Screen();
         }
