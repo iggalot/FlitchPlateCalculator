@@ -99,61 +99,66 @@ namespace FlitchPlateCalculator.Views
             FlitchPlateVM.Draw();
         }
 
+        private void AddPlateControlEvents(UserControl uc)
+        {
+            // and set up the events to handle recalculations
+            ((PlateElementControl)uc).OnControlModified += RecreateViewModel;
+            ((PlateElementControl)uc).OnRemovePlateControl += RemovePlateControl;
+            ((PlateElementControl)uc).OnPlateModelChanged += UpdatePlateModel;
+            ((PlateElementControl)uc).OnCopyPlateModel += CopyPlateModel;
+        }
+
         /// <summary>
         /// Setup the view model for this window
         /// </summary>
         /// <param name="window"></param>
         private void CreateUI(MainWindow window)
         {
-            // Create the steel grade drop down box
-            foreach (var item in ocSteelGrades)
-            {
-                ComboBoxItem cbi1 = new ComboBoxItem();
-                cbi1.Content = item.ToString();
-                window.cmbSteelGrade.Items.Add(cbi1);
-            }
+            //// Create the steel grade drop down box
+            //foreach (var item in ocSteelGrades)
+            //{
+            //    ComboBoxItem cbi1 = new ComboBoxItem();
+            //    cbi1.Content = item.ToString();
+            //    window.cmbSteelGrade.Items.Add(cbi1);
+            //}
 
-            // Set the default to the first item
-            window.cmbSteelGrade.SelectedItem = window.cmbSteelGrade.Items[1];
-            window.cmbSteelGrade.FontSize = 16;
-            window.cmbSteelGrade.FontWeight = FontWeights.Bold;
-            window.cmbSteelGrade.HorizontalAlignment = HorizontalAlignment.Center;
-            window.cmbSteelGrade.VerticalAlignment = VerticalAlignment.Top;
+            //// Set the default to the first item
+            //window.cmbSteelGrade.SelectedItem = window.cmbSteelGrade.Items[1];
+            //window.cmbSteelGrade.FontSize = 16;
+            //window.cmbSteelGrade.FontWeight = FontWeights.Bold;
+            //window.cmbSteelGrade.HorizontalAlignment = HorizontalAlignment.Center;
+            //window.cmbSteelGrade.VerticalAlignment = VerticalAlignment.Top;
 
-            // Create the steel thickness drop down box
-            foreach (var item in ocSteelQty)
-            {
-                ComboBoxItem cbi1 = new ComboBoxItem();
-                cbi1.Content = item.ToString();
-                window.cmbSteelQty.Items.Add(cbi1);
-            }
+            //// Create the steel thickness drop down box
+            //foreach (var item in ocSteelQty)
+            //{
+            //    ComboBoxItem cbi1 = new ComboBoxItem();
+            //    cbi1.Content = item.ToString();
+            //    window.cmbSteelQty.Items.Add(cbi1);
+            //}
 
-            // Set the default to the first item
-            window.cmbSteelQty.SelectedItem = window.cmbSteelQty.Items[0];
-            window.cmbSteelQty.FontSize = 16;
-            window.cmbSteelQty.FontWeight = FontWeights.Bold;
-            window.cmbSteelQty.HorizontalAlignment = HorizontalAlignment.Center;
-            window.cmbSteelQty.VerticalAlignment = VerticalAlignment.Top;
-
-
-            // Create the steel thickness drop down box
-            foreach (var item in ocSteelThickness)
-            {
-                ComboBoxItem cbi1 = new ComboBoxItem();
-                cbi1.Content = item.ToString();
-                window.cmbSteelThickness.Items.Add(cbi1);
-            }
-
-            // Set the default to the first item
-            window.cmbSteelThickness.SelectedItem = window.cmbSteelThickness.Items[2];
-            window.cmbSteelThickness.FontSize = 16;
-            window.cmbSteelThickness.FontWeight = FontWeights.Bold;
-            window.cmbSteelThickness.HorizontalAlignment = HorizontalAlignment.Center;
-            window.cmbSteelThickness.VerticalAlignment = VerticalAlignment.Top;
+            //// Set the default to the first item
+            //window.cmbSteelQty.SelectedItem = window.cmbSteelQty.Items[0];
+            //window.cmbSteelQty.FontSize = 16;
+            //window.cmbSteelQty.FontWeight = FontWeights.Bold;
+            //window.cmbSteelQty.HorizontalAlignment = HorizontalAlignment.Center;
+            //window.cmbSteelQty.VerticalAlignment = VerticalAlignment.Top;
 
 
+            //// Create the steel thickness drop down box
+            //foreach (var item in ocSteelThickness)
+            //{
+            //    ComboBoxItem cbi1 = new ComboBoxItem();
+            //    cbi1.Content = item.ToString();
+            //    window.cmbSteelThickness.Items.Add(cbi1);
+            //}
 
-
+            //// Set the default to the first item
+            //window.cmbSteelThickness.SelectedItem = window.cmbSteelThickness.Items[2];
+            //window.cmbSteelThickness.FontSize = 16;
+            //window.cmbSteelThickness.FontWeight = FontWeights.Bold;
+            //window.cmbSteelThickness.HorizontalAlignment = HorizontalAlignment.Center;
+            //window.cmbSteelThickness.VerticalAlignment = VerticalAlignment.Top;
 
             // Add controls to the spSteelControl panel
             for (int i = 0; i < Model.Plates.Count; i++)
@@ -161,50 +166,38 @@ namespace FlitchPlateCalculator.Views
                 UserControl uc = new PlateElementControl(Model.Plates[i]);
                 spSteelControls.Children.Add(uc);
 
-                // and set up the events to handle recalculations
-                ((PlateElementControl)uc).OnControlModified += RecreateModel;
-            }
-            
-
-
-
-
-
-
-
-
-
-
-
-            // Create the wood grade drop down box
-            foreach (var item in ocWoodGrades)
-            {
-                ComboBoxItem cbi1 = new ComboBoxItem();
-                cbi1.Content = item.ToString();
-                window.cmbWoodGrade.Items.Add(cbi1);
+                AddPlateControlEvents(uc);
             }
 
-            // Set the default to the first item
-            window.cmbWoodGrade.SelectedItem = window.cmbWoodGrade.Items[2];
-            window.cmbWoodGrade.FontSize = 16;
-            window.cmbWoodGrade.FontWeight = FontWeights.Bold;
-            window.cmbWoodGrade.HorizontalAlignment = HorizontalAlignment.Center;
-            window.cmbWoodGrade.VerticalAlignment = VerticalAlignment.Top;
+            //// Create the wood grade drop down box
+            //foreach (var item in ocWoodGrades)
+            //{
+            //    ComboBoxItem cbi1 = new ComboBoxItem();
+            //    cbi1.Content = item.ToString();
+            //    window.cmbWoodGrade.Items.Add(cbi1);
+            //}
 
-            // Create the steel thickness drop down box
-            foreach (var item in ocWoodQty)
-            {
-                ComboBoxItem cbi1 = new ComboBoxItem();
-                cbi1.Content = item.ToString();
-                window.cmbWoodQty.Items.Add(cbi1);
-            }
+            //// Set the default to the first item
+            //window.cmbWoodGrade.SelectedItem = window.cmbWoodGrade.Items[2];
+            //window.cmbWoodGrade.FontSize = 16;
+            //window.cmbWoodGrade.FontWeight = FontWeights.Bold;
+            //window.cmbWoodGrade.HorizontalAlignment = HorizontalAlignment.Center;
+            //window.cmbWoodGrade.VerticalAlignment = VerticalAlignment.Top;
 
-            // Set the default to the first item
-            window.cmbWoodQty.SelectedItem = window.cmbWoodQty.Items[1];
-            window.cmbWoodQty.FontSize = 16;
-            window.cmbWoodQty.FontWeight = FontWeights.Bold;
-            window.cmbWoodQty.HorizontalAlignment = HorizontalAlignment.Center;
-            window.cmbWoodQty.VerticalAlignment = VerticalAlignment.Top;
+            //// Create the steel thickness drop down box
+            //foreach (var item in ocWoodQty)
+            //{
+            //    ComboBoxItem cbi1 = new ComboBoxItem();
+            //    cbi1.Content = item.ToString();
+            //    window.cmbWoodQty.Items.Add(cbi1);
+            //}
+
+            //// Set the default to the first item
+            //window.cmbWoodQty.SelectedItem = window.cmbWoodQty.Items[1];
+            //window.cmbWoodQty.FontSize = 16;
+            //window.cmbWoodQty.FontWeight = FontWeights.Bold;
+            //window.cmbWoodQty.HorizontalAlignment = HorizontalAlignment.Center;
+            //window.cmbWoodQty.VerticalAlignment = VerticalAlignment.Top;
 
 
             //// Create the yield stress drop down
@@ -290,7 +283,7 @@ namespace FlitchPlateCalculator.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void RecreateModel(object sender, RoutedEventArgs e)
+        private void RecreateViewModel(object sender, RoutedEventArgs e)
         {
             //MessageBox.Show("There are " + spSteelControls.Children.Count + "child elements at this time.");
 
@@ -311,6 +304,96 @@ namespace FlitchPlateCalculator.Views
         }
 
         /// <summary>
+        /// Remove the plate user control from the UI
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RemovePlateControl(object sender, RoutedEventArgs e)
+        {
+            PlateModel remove_model = ((PlateElementControl)sender).Model;
+
+            foreach(UserControl uc in spSteelControls.Children)
+            {
+                PlateModel test_model = ((PlateElementControl)uc).Model;
+
+                // search for the control in the list and check if it has the same model information
+                if (test_model.Equals(remove_model))
+                {
+                    spSteelControls.Children.Remove(uc);
+                    break;
+                }
+            }
+
+            // recreate the view model
+            RecreateViewModel(sender, e);
+
+            OnUserUpdate();
+        }
+
+        /// <summary>
+        /// Event to update a plate model after it has been edited in the plate control
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UpdatePlateModel(object sender, RoutedEventArgs e)
+        {
+            // get the old model
+            PlateModel remove_model = ((PlateElementControl)sender).OldModel;
+
+            // store the current model from the control
+            PlateModel store_model = ((PlateElementControl)sender).Model;
+
+            // search for the old model 
+            for (int i = 0; i < spSteelControls.Children.Count; i++)
+            {
+                PlateModel uc_model = ((PlateElementControl)spSteelControls.Children[i]).Model;
+                if (uc_model.Equals(store_model))
+                {
+                    // get the control and overwrite the model
+                    spSteelControls.Children.RemoveAt(i);
+
+                    spSteelControls.Children.Insert(i, new PlateElementControl(store_model));
+                    UserControl uc = ((PlateElementControl)spSteelControls.Children[i]);
+
+                    // and set up the events to handle recalculations
+                    AddPlateControlEvents(uc);
+ //                   ((PlateElementControl)uc).OnControlModified += RecreateViewModel;
+//                    ((PlateElementControl)uc).OnRemovePlateControl += RemovePlateControl;
+
+                    break;
+                }
+            }
+
+            // recreate the view model
+            RecreateViewModel(sender, e);
+
+            OnUserUpdate();
+
+        }
+
+        /// <summary>
+        /// Event to update a plate model after it has been edited in the plate control
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CopyPlateModel(object sender, RoutedEventArgs e)
+        {
+            // get the model
+            PlateModel copy_model = ((PlateElementControl)sender).Model;
+
+            UserControl uc = new PlateElementControl(copy_model);
+            AddPlateControlEvents(uc);
+
+            spSteelControls.Children.Add(uc);
+
+            // recreate the view model and render it
+            RecreateViewModel(sender, e);
+
+            OnUserUpdate();
+
+        }
+
+        /// <summary>
         /// Event that triggers when a combo box selection has changed.
         /// </summary>
         /// <param name="sender"></param>
@@ -322,6 +405,25 @@ namespace FlitchPlateCalculator.Views
                 OnUserUpdate();
                 return;
             }
+        }
+
+        private void Button_NewPlateClick(object sender, RoutedEventArgs e)
+        {
+            // create a new arbitrary plate
+            PlateModel new_model = new PlateModel(20,10, new Point(0,0), MaterialTypes.MATERIAL_UNDEFINED);
+            Model.AddPlate(new_model);
+
+            // add the control to the layout
+            UserControl uc = new PlateElementControl(new_model);
+            AddPlateControlEvents(uc);
+            //((PlateElementControl)uc).OnControlModified += RecreateViewModel;
+            //((PlateElementControl)uc).OnRemovePlateControl += RemovePlateControl;
+            //((PlateElementControl)uc).OnPlateModelChanged += UpdatePlateModel;
+
+            spSteelControls.Children.Add(uc);
+
+
+            OnUserUpdate();
         }
 
 

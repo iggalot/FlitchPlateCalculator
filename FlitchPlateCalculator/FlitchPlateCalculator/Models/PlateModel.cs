@@ -49,9 +49,6 @@ namespace FlitchPlateCalculator.Models
         /// <param name="point">Centroid position</param>
         public PlateModel(double width, double height, Point point, MaterialTypes mat_type = MaterialTypes.MATERIAL_STEEL)
         {
-            if (mat_type == MaterialTypes.MATERIAL_UNDEFINED)
-                return;
-
             Material = new MaterialModel(mat_type);
 
             Width = width;
@@ -82,6 +79,10 @@ namespace FlitchPlateCalculator.Models
         private double ComputeWeight()
         {
             // steel
+            if(Material.MaterialType == MaterialTypes.MATERIAL_UNDEFINED)
+            {
+                return -1000000000;
+            }
             if(Material.MaterialType == MaterialTypes.MATERIAL_STEEL)
             {
                 return Area * 490 / 144.0;
@@ -97,9 +98,49 @@ namespace FlitchPlateCalculator.Models
             temp = Width;
             Width = Height;
             Height = temp;
-
         }
 
+        /// <summary>
+        /// Compares this plate model to another plate model, returning true is dimensions are the same
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public bool IsSamePlate(object obj)
+        {
+            PlateModel model_plate = obj as PlateModel;
+
+            if(model_plate.Weight != this.Weight)
+            {
+                return false;
+            }
+
+            if(((this.Width == model_plate.Width) && (this.Height == model_plate.Height)))
+            {
+                // continue 
+            } else 
+            {
+                // is it rotated?
+                if (((this.Width == model_plate.Height) && (this.Height == model_plate.Width)))
+                {
+                    // continue
+                } else
+                {
+                    return false;
+                }
+            }
+
+            if (model_plate.Material.MaterialType != this.Material.MaterialType)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        ///  Generic override 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             string str = "";

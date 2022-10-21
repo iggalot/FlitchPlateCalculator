@@ -29,7 +29,9 @@
             {
                 case MaterialTypes.MATERIAL_UNDEFINED:
                     {
-                        throw new System.ArgumentException(type.ToString() + " error");
+                        E = -1000000000;
+                        Fb = 0;
+                        break;
                     }
                 case MaterialTypes.MATERIAL_STEEL:
                     {

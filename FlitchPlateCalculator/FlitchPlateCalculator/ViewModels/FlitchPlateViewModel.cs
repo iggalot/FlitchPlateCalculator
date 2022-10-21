@@ -1,4 +1,5 @@
 ﻿using FlitchPlateCalculator.Models;
+using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -36,7 +37,10 @@ namespace FlitchPlateCalculator.ViewModels
         public double Centroid_X_Untr { get => Model.Centroid_Untransformed.X; }
         public double Centroid_Y_Untr { get => Model.Centroid_Untransformed.Y; }
 
-
+        public double HOR_TOP { get => Math.Round(BB_p2_WORLD.Y, 3); }
+        public double HOR_BOTTOM { get => Math.Round(BB_p1_WORLD.Y, 3); }
+        public double VER_LEFT { get => Math.Round(BB_p1_WORLD.X, 3); }
+        public double VER_RIGHT { get => Math.Round(BB_p2_WORLD.X, 3); }
 
 
 
@@ -52,11 +56,10 @@ namespace FlitchPlateCalculator.ViewModels
             Model = model;
             FPCanvas = c;
 
-            // Find drawing parameters
-            FindBoundingBox_Untransformed_World();
-            ComputeScaleFactor();
-            FindBoundingBox_Untransformed_Screen();
+            Update();
         }
+
+
 
         /// <summary>
         /// Draws the plates to the canvas
@@ -67,7 +70,30 @@ namespace FlitchPlateCalculator.ViewModels
             // clear the canvas
             FPCanvas.Children.Clear();
 
+            // draw origin grid lines
+            // vertical origin line
+            Line line = new Line();
+            line.Visibility = System.Windows.Visibility.Visible;
+            line.StrokeThickness = 4;
+            line.Stroke = System.Windows.Media.Brushes.DarkGray;
+            line.X1 = FPCanvas.Width * 0.5;
+            line.Y1 = 0;
 
+            line.X2 = FPCanvas.Width * 0.5;
+            line.Y2 = FPCanvas.Height;
+            FPCanvas.Children.Add(line);
+
+            // horizontal origin line
+            line = new Line();
+            line.Visibility = System.Windows.Visibility.Visible;
+            line.StrokeThickness = 4;
+            line.Stroke = System.Windows.Media.Brushes.DarkGray;
+            line.X1 = 0;
+            line.Y1 = FPCanvas.Height * 0.5;
+
+            line.X2 = FPCanvas.Width;
+            line.Y2 = FPCanvas.Height * 0.5;
+            FPCanvas.Children.Add(line);
 
             // Draw the plates
             foreach (PlateModel p in Model.Plates)
@@ -87,7 +113,8 @@ namespace FlitchPlateCalculator.ViewModels
                     Height = height_on_screen,
                     Fill = GetMaterialColor(p.Material.MaterialType),
                     Stroke = Brushes.Black,
-                    StrokeThickness = 2
+                    StrokeThickness = 1,
+                    Opacity = 0.90
                 };
 
                 FPCanvas.Children.Add(rect);
@@ -95,7 +122,26 @@ namespace FlitchPlateCalculator.ViewModels
                 Canvas.SetLeft(rect, set_left);
             }
 
-            double default_width1 = 20;
+            // Draw composite section centroid
+            DrawCentroidMarker(8);
+
+
+            //// draw the bounding box
+            //Line line = new Line();
+            //line.Visibility = System.Windows.Visibility.Visible;
+            //line.StrokeThickness = 4;
+            //line.Stroke = System.Windows.Media.Brushes.Blue;
+            //line.X1 = BB_p1_SCREEN.X;
+            //line.Y1 = BB_p1_SCREEN.Y;
+
+            //line.X2 = BB_p2_SCREEN.X;
+            //line.Y2 = BB_p2_SCREEN.Y;
+            //FPCanvas.Children.Add(line);
+        }
+
+        private void DrawCentroidMarker(double width)
+        {
+            double default_width1 = width;
             double width_on_screen1 = default_width1;
             double height_on_screen1 = default_width1;
             double delta_x1 = Centroid_X_Untr * CANVAS_SCALE;
@@ -110,7 +156,7 @@ namespace FlitchPlateCalculator.ViewModels
             {
                 Width = width_on_screen1,
                 Height = height_on_screen1,
-                Fill = Brushes.Black,
+                Fill = Brushes.Transparent,
                 Stroke = Brushes.Black,
                 StrokeThickness = 1
             };
@@ -118,19 +164,6 @@ namespace FlitchPlateCalculator.ViewModels
             FPCanvas.Children.Add(circle);
             Canvas.SetTop(circle, set_top1);
             Canvas.SetLeft(circle, set_left1);
-
-
-            //// draw the bounding box
-            //Line line = new Line();
-            //line.Visibility = System.Windows.Visibility.Visible;
-            //line.StrokeThickness = 4;
-            //line.Stroke = System.Windows.Media.Brushes.Blue;
-            //line.X1 = BB_p1_SCREEN.X;
-            //line.Y1 = BB_p1_SCREEN.Y;
-
-            //line.X2 = BB_p2_SCREEN.X;
-            //line.Y2 = BB_p2_SCREEN.Y;
-            //FPCanvas.Children.Add(line);
         }
 
         /// <summary>
@@ -157,21 +190,15 @@ namespace FlitchPlateCalculator.ViewModels
             switch (type)
             {
                 case MaterialTypes.MATERIAL_UNDEFINED:
-                    {
-                        throw new System.ArgumentException("In GetMaterialColor: " + type.ToString() + " error");
-                    }
+                    return Brushes.Cyan;
                 case MaterialTypes.MATERIAL_STEEL:
-                    {
-                        return Brushes.Red;
-                    }
+                    return Brushes.Red;
                 case MaterialTypes.MATERIAL_WOOD_SYP:
                     return Brushes.Blue;
                 case MaterialTypes.MATERIAL_WOOD_DF:
                     return Brushes.Blue;
                 case MaterialTypes.MATERIAL_WOOD_LVL_E2_0:
-                    {
-                        return Brushes.Green;
-                    }
+                    return Brushes.Green;
                 default:
                     throw new System.ArgumentException("In GetMaterialColor: " + type.ToString() + " error");
             }
@@ -233,7 +260,8 @@ namespace FlitchPlateCalculator.ViewModels
         public void Update()
         {
             Model.UpdateCalculations();
-            
+            UpdateViewFactors();
+
             OnPropertyChanged("Area");
             OnPropertyChanged("Weight");
             OnPropertyChanged("Ix_Untr");
@@ -241,7 +269,23 @@ namespace FlitchPlateCalculator.ViewModels
             OnPropertyChanged("Centroid_X_Untr");
             OnPropertyChanged("Centroid_Y_Untr");
 
+            OnPropertyChanged("HOR_TOP");
+            OnPropertyChanged("HOR_BOTTOM");
+            OnPropertyChanged("VER_LEFT");
+            OnPropertyChanged("VER_RIGHT");
 
+
+        }
+
+        /// <summary>
+        /// Update the drawing settings
+        /// </summary>
+        private void UpdateViewFactors()
+        {
+            // Find drawing parameters
+            FindBoundingBox_Untransformed_World();
+            ComputeScaleFactor();
+            FindBoundingBox_Untransformed_Screen();
         }
     }
 }

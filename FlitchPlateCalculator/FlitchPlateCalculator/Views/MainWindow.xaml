@@ -12,11 +12,13 @@
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
                 <StackPanel Orientation="Vertical" >
+                    <StackPanel Orientation="Horizontal" >
+                        <Label Content="Plates" FontSize="24" FontWeight="Bold"/>
+                    </StackPanel>
                     <!--Steel-->
                     <StackPanel Orientation="Vertical" Background="LightBlue">
-                        <StackPanel Orientation="Horizontal" >
+                        <!--<StackPanel Orientation="Horizontal" >
                             <Label Content="Steel" FontSize="24" FontWeight="Bold"/>
-
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" >
@@ -33,22 +35,20 @@
                             
                             <Label Content="Height" Height="28" Width="80"/>
                             <TextBox Height="28" Text="stl ht" Width="100"/>
-
-                            
-
-
                             
                             <Button Content="Add" Width="40" Height="28"/>
-
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" >
                             <Label Content="Fb" Height="28" Width="80"/>
                             <TextBlock Height="24" Text="steel fb" Width="100"/>
                             <Label Content="E" Height="28" Width="80"/>
                             <TextBlock Height="24" Text="steel E" Width="100"/>
+                        </StackPanel>-->
+
+                        <StackPanel Orientation="Vertical" Height="Auto">
+                            <StackPanel Name ="spSteelControls"/>
+                            <Button Content="Add New Plate" FontWeight="Bold" Width="100" Height="28" Click="Button_NewPlateClick"/>
                         </StackPanel>
-                        
-                        <StackPanel Name ="spSteelControls"/>
                         
                         <TextBlock Background="White" Margin="5" HorizontalAlignment="Center" Height="100" Text="STEEL STATUS NOTES" Width="600"/>
                     </StackPanel>
@@ -56,7 +56,7 @@
                     <!--Wood-->
                     <StackPanel>
                         <StackPanel Orientation ="Vertical" Background="LightGreen">
-                            <StackPanel Orientation="Horizontal">
+                            <!--<StackPanel Orientation="Horizontal">
                                 <Label Content="Wood" FontSize="24" FontWeight="Bold"/>
                                 <ComboBox Name="cmbWoodGrade" Margin="5" Width="90" HorizontalAlignment="Center"  SelectionChanged="cmbSelectionChanged"/>
                             </StackPanel>
@@ -75,21 +75,35 @@
                                 <TextBox Height="28" Text="wood ht" Width="100"/>
 
                                 <Button Content="Add" Width="40" Height="28"/>
-
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" >
                                 <Label Content="Fb" Height="28" Width="80"/>
                                 <TextBlock Height="24" Text="wood fb" Width="100"/>
                                 <Label Content="E" Height="28" Width="80"/>
                                 <TextBlock Height="24" Text="wood fb" Width="100"/>
-                            </StackPanel>
+                            </StackPanel>-->
                             <TextBlock Background="White" Margin="5" HorizontalAlignment="Center" Height="100" Text="WOOD STATUS NOTES" Width="600"/>
                         </StackPanel>
 
                     </StackPanel>
                 </StackPanel>
-                <Canvas Name="MainCanvas" Background="LightGray" Width="550" Height="550"/>
+                <StackPanel Orientation="Vertical">
+                    <Canvas Name="MainCanvas" Background="LightGray" Width="550" Height="550"/>
 
+                    <StackPanel Orientation="Horizontal">
+                        <Label Content="H-T:" Height="28" Width="50"/>
+                        <TextBox Text="{Binding Path=HOR_TOP, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"  Width="40"/>
+
+                        <Label Content="   H-B:" Height="28" Width="50"/>
+                        <TextBox Text="{Binding Path=HOR_BOTTOM, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"  Width="40"/>
+
+                        <Label Content="   V-L:" Height="28" Width="50"/>
+                        <TextBox Text="{Binding Path=VER_LEFT, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"  Width="40"/>
+
+                        <Label Content="   V-R:" Height="28" Width="50"/>
+                        <TextBox Text="{Binding Path=VER_RIGHT, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center" Width="40" />
+                    </StackPanel>
+                </StackPanel>
             </StackPanel>
             <!--Results-->
             <StackPanel Orientation="Horizontal">
