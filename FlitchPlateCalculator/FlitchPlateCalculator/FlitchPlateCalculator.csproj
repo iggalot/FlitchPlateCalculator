@@ -73,6 +73,7 @@
     <Compile Include="Models\FlitchPlateModel.cs" />
     <Compile Include="Models\MaterialModel.cs" />
     <Compile Include="Models\PlateModel.cs" />
+    <Compile Include="Utilities\GeometryHelpers.cs" />
     <Compile Include="ViewModels\BaseVieWModel.cs" />
     <Compile Include="ViewModels\FlitchPlateViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">

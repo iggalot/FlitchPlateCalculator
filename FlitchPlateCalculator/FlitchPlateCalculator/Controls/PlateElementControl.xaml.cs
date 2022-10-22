@@ -24,7 +24,9 @@ namespace FlitchPlateCalculator.Controls
     /// </summary>
     public partial class PlateElementControl : UserControl, INotifyPropertyChanged
     {
+        private static int _id = 0;
 
+        public int ID { get; set; }
 
         // Create the OnPropertyChanged method to raise the event
         // The calling member's name will be used as the parameter.
@@ -38,8 +40,6 @@ namespace FlitchPlateCalculator.Controls
 
         // stores the OldModel information
         public PlateModel OldModel { get; set; }
-
-        private bool bPlateControlFinishedLoading = false;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -65,10 +65,17 @@ namespace FlitchPlateCalculator.Controls
 
         public PlateElementControl(PlateModel model)
         {
+            // set and ID marker for the control
+            ID = _id;
+            _id++;
+
             InitializeComponent();
 
             Model = model;
+            Model.Id = ID;
+
             OldModel = model;
+            OldModel.Id = ID;
 
             DataContext = this;
 
@@ -82,7 +89,6 @@ namespace FlitchPlateCalculator.Controls
         /// <param name="e"></param>
         private void OnPlateControlLoaded(object sender, RoutedEventArgs e)
         {
-            bPlateControlFinishedLoading = true;
             Update(); // run the calculations for the current data set
         }
 
@@ -97,6 +103,21 @@ namespace FlitchPlateCalculator.Controls
             cmbGrade.FontWeight = FontWeights.Bold;
             cmbGrade.HorizontalAlignment = HorizontalAlignment.Center;
             cmbGrade.VerticalAlignment = VerticalAlignment.Top;
+
+            ApplyUserWarnings();
+        }
+
+        private void ApplyUserWarnings()
+        {
+            if(Model.Material.MaterialType == MaterialTypes.MATERIAL_UNDEFINED)
+            {
+                spMainPlate.Background = Brushes.LightSalmon;
+                spMainPlate.Opacity = 0.75;
+            } else
+            {
+                spMainPlate.Background = Brushes.AntiqueWhite;
+                spMainPlate.Opacity = 0.9;
+            }
         }
 
         /// <summary>
@@ -184,6 +205,8 @@ namespace FlitchPlateCalculator.Controls
             btnEdit.Visibility = Visibility.Visible;
             btnRotate.IsEnabled = true;
             btnDelete.IsEnabled = true;
+            btnCopy.IsEnabled = true;
+
 
             tblk_Grade.Visibility = Visibility.Visible;
             cmbGrade.Visibility = Visibility.Collapsed;
@@ -216,12 +239,16 @@ namespace FlitchPlateCalculator.Controls
         }
         private void ButtonEdit_Click(object sender, RoutedEventArgs e)
         {
+            spMainPlate.Opacity = 1.0;
+
             btnSave.Visibility = Visibility.Visible;
             btnCancel.Visibility = Visibility.Visible;
 
             btnEdit.Visibility = Visibility.Collapsed;
             btnRotate.IsEnabled = false;
             btnDelete.IsEnabled = false;
+            btnCopy.IsEnabled = false;
+
 
             tblk_Grade.Visibility = Visibility.Collapsed;
             cmbGrade.Visibility = Visibility.Visible;
@@ -251,6 +278,8 @@ namespace FlitchPlateCalculator.Controls
                 btnEdit.Visibility = Visibility.Visible;
                 btnRotate.IsEnabled = true;
                 btnDelete.IsEnabled = true;
+                btnCopy.IsEnabled = true;
+
 
                 tblk_Grade.Visibility = Visibility.Visible;
                 cmbGrade.Visibility = Visibility.Collapsed;

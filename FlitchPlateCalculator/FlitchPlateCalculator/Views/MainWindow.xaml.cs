@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using static FlitchPlateCalculator.Utilities.GeometryHelpers;
 
 namespace FlitchPlateCalculator.Views
 {
@@ -72,8 +73,198 @@ namespace FlitchPlateCalculator.Views
         {
             if (bWindowFinishedLoading || Model.Plates.Count > 0)
             {
+
                 Update();
             }
+        }
+
+        private void UpdateStatusMessage()
+        {
+            string str = "Assembly has " + Model.Plates.Count + " plates";
+            bool bHasErrors = false;
+
+            // Does the model have any undefined materials?
+            bool materials_defined = true;
+            foreach (PlateModel plate in Model.Plates)
+            {
+                if (plate.Material.MaterialType == MaterialTypes.MATERIAL_UNDEFINED)
+                {
+                    materials_defined = false;
+                    bHasErrors = true;
+                }
+            }
+
+            // changed the background of the canvas
+            if (materials_defined == false)
+            {
+                str += "\nOne or more materials are undefined";
+            }
+
+
+
+            // Check for overlapping plates
+            for (int i = 0; i < Model.Plates.Count; i++)
+            {
+                // is plate 'i' x-corner between plate 'j' x-corner?
+                double i_x_left = Math.Round(Model.Plates[i].Centroid.X - Model.Plates[i].Width * 0.5, 3);
+                double i_x_right = Math.Round(Model.Plates[i].Centroid.X + Model.Plates[i].Width * 0.5, 3);
+                double i_y_top = Math.Round(Model.Plates[i].Centroid.Y + Model.Plates[i].Height * 0.5, 3);
+                double i_y_bot = Math.Round(Model.Plates[i].Centroid.Y - Model.Plates[i].Height * 0.5, 3);
+
+                for (int j = 0; j < Model.Plates.Count; j++)
+                {
+                    // are the two plates the same?  If so skip and continue searching
+                    if (i == j)
+                    {
+                        continue;
+                    }
+
+                    double j_x_left = Math.Round(Model.Plates[j].Centroid.X - Model.Plates[j].Width * 0.5, 3);
+                    double j_x_right = Math.Round(Model.Plates[j].Centroid.X + Model.Plates[j].Width * 0.5, 3);
+                    double j_y_top = Math.Round(Model.Plates[j].Centroid.Y + Model.Plates[j].Height * 0.5, 3);
+                    double j_y_bot = Math.Round(Model.Plates[j].Centroid.Y - Model.Plates[j].Height * 0.5, 3);
+
+                    // if any of the edge lines intersect then they overlap
+                    //top A top B
+
+                    bool rectangles_overlap = false;
+
+                    IntersectPointData intersect_point1 = FindPointOfIntersectLines_2D(i_x_left, i_y_top, i_x_right, i_y_top, j_x_left, j_y_top, j_x_right, j_y_top);
+                    if(intersect_point1.isWithinSegment == true)
+                    {
+                        rectangles_overlap = true;
+                    }
+                    //top A right B
+                    IntersectPointData intersect_point2 = FindPointOfIntersectLines_2D(i_x_left, i_y_top, i_x_right, i_y_top, j_x_right, j_y_top, j_x_right, j_y_bot);
+                    if (intersect_point2.isWithinSegment == true)
+                    {
+                        rectangles_overlap = true;
+                    }
+
+                    //top A bot B
+                    IntersectPointData intersect_point3 = FindPointOfIntersectLines_2D(i_x_left, i_y_top, i_x_right, i_y_top, j_x_left, j_y_bot, j_x_right, j_y_bot);
+                    if (intersect_point3.isWithinSegment == true)
+                    {
+                        rectangles_overlap = true;
+                    }
+                    //top A left B
+                    IntersectPointData intersect_point4 = FindPointOfIntersectLines_2D(i_x_left, i_y_top, i_x_right, i_y_top, j_x_left, j_y_bot, j_x_left, j_y_bot);
+                    if (intersect_point4.isWithinSegment == true)
+                    {
+                        rectangles_overlap = true;
+                    }
+
+                    //right A top B
+                    IntersectPointData intersect_point5 = FindPointOfIntersectLines_2D(i_x_right, i_y_top, i_x_right, i_y_bot, j_x_left, j_y_top, j_x_right, j_y_top);
+                    if (intersect_point5.isWithinSegment == true)
+                    {
+                        rectangles_overlap = true;
+                    }
+                    //right A right B
+                    IntersectPointData intersect_point6 = FindPointOfIntersectLines_2D(i_x_right, i_y_top, i_x_right, i_y_bot, j_x_right, j_y_top, j_x_right, j_y_bot);
+                    if (intersect_point6.isWithinSegment == true)
+                    {
+                        rectangles_overlap = true;
+                    }
+                    //right A bot B
+                    IntersectPointData intersect_point7 = FindPointOfIntersectLines_2D(i_x_right, i_y_top, i_x_right, i_y_bot, j_x_left, j_y_bot, j_x_right, j_y_bot);
+                    if (intersect_point7.isWithinSegment == true)
+                    {
+                        rectangles_overlap = true;
+                    }
+                    //right A left B
+                    IntersectPointData intersect_point8 = FindPointOfIntersectLines_2D(i_x_right, i_y_top, i_x_right, i_y_bot, j_x_left, j_y_bot, j_x_left, j_y_bot);
+                    if (intersect_point8.isWithinSegment == true)
+                    {
+                        rectangles_overlap = true;
+                    }
+
+                    //bot A top B
+                    IntersectPointData intersect_point9 = FindPointOfIntersectLines_2D(i_x_left, i_y_bot, i_x_right, i_y_bot, j_x_left, j_y_top, j_x_right, j_y_top);
+                    if (intersect_point9.isWithinSegment == true)
+                    {
+                        rectangles_overlap = true;
+                    }
+
+                    //bot A right B
+                    IntersectPointData intersect_point10 = FindPointOfIntersectLines_2D(i_x_left, i_y_top, i_x_right, i_y_bot, j_x_right, j_y_top, j_x_right, j_y_bot);
+                    if (intersect_point10.isWithinSegment == true)
+                    {
+                        rectangles_overlap = true;
+                    }
+
+                    //bot A bot B
+                    IntersectPointData intersect_point11 = FindPointOfIntersectLines_2D(i_x_left, i_y_bot, i_x_right, i_y_bot, j_x_left, j_y_bot, j_x_right, j_y_bot);
+                    if (intersect_point11.isWithinSegment == true)
+                    {
+                        rectangles_overlap = true;
+                    }
+
+                    //bot A left B
+                    IntersectPointData intersect_point12 = FindPointOfIntersectLines_2D(i_x_left, i_y_bot, i_x_right, i_y_bot, j_x_left, j_y_bot, j_x_left, j_y_bot);
+                    if (intersect_point12.isWithinSegment == true)
+                    {
+                        rectangles_overlap = true;
+                    }
+
+                    //left A top B
+                    IntersectPointData intersect_point13 = FindPointOfIntersectLines_2D(i_x_left, i_y_top, i_x_left, i_y_bot, j_x_left, j_y_top, j_x_right, j_y_top);
+                    if (intersect_point13.isWithinSegment == true)
+                    {
+                        rectangles_overlap = true;
+                    }
+
+                    //left A right B
+                    IntersectPointData intersect_point14 = FindPointOfIntersectLines_2D(i_x_left, i_y_top, i_x_left, i_y_bot, j_x_right, j_y_top, j_x_right, j_y_bot);
+                    if (intersect_point14.isWithinSegment == true)
+                    {
+                        rectangles_overlap = true;
+                    }
+
+                    //left A bot B
+                    IntersectPointData intersect_point15 = FindPointOfIntersectLines_2D(i_x_left, i_y_top, i_x_left, i_y_bot, j_x_left, j_y_bot, j_x_right, j_y_bot);
+                    if (intersect_point15.isWithinSegment == true)
+                    {
+                        rectangles_overlap = true;
+                    }
+
+                    //left A left B
+                    IntersectPointData intersect_point16 = FindPointOfIntersectLines_2D(i_x_left, i_y_top, i_x_left, i_y_bot, j_x_left, j_y_bot, j_x_left, j_y_bot);
+                    if (intersect_point16.isWithinSegment == true)
+                    {
+                        rectangles_overlap = true;
+                    }
+
+                    // if rectangles dont have intersecting edges, need to check case that j plate is completely inside i plate
+                    if(j_x_left >= i_x_left && j_x_right <= i_x_right && j_y_top <= i_y_top && j_y_bot >= i_y_bot )
+                    {
+                        rectangles_overlap = true;
+                    }
+
+                    // the corner of i is inside the region of j, so it's overlapping
+                    if (rectangles_overlap is true)
+                    {
+                        str += "\nPlates " + i.ToString() + " and " + j.ToString() + " are overlapping";
+                        bHasErrors = true;
+                        continue;
+                    }
+                }
+            }
+
+
+
+            if (bHasErrors is true){
+                tblk_StatusNotes.Foreground = Brushes.Red;
+                MainCanvas.Background = Brushes.LightSalmon;
+                MainCanvas.Opacity = 0.75;
+            } else
+            {
+                tblk_StatusNotes.Foreground = Brushes.Black;
+                MainCanvas.Background = Brushes.LightGray;
+                MainCanvas.Opacity = 1.0;
+            }
+
+            FlitchPlateVM.StatusMessage = str;
         }
 
         /// <summary>
@@ -91,7 +282,7 @@ namespace FlitchPlateCalculator.Views
                 DataContext = FlitchPlateVM;
             }
 
-            //FlitchPlateVM.Update();
+            UpdateStatusMessage();
 
             FlitchPlateVM.Draw();
         }
@@ -161,6 +352,7 @@ namespace FlitchPlateCalculator.Views
             for (int i = 0; i < Model.Plates.Count; i++)
             {
                 UserControl uc = new PlateElementControl(Model.Plates[i]);
+                ((PlateElementControl)uc).ID = i;  
                 spSteelControls.Children.Add(uc);
 
                 AddPlateControlEvents(uc);
@@ -294,6 +486,7 @@ namespace FlitchPlateCalculator.Views
                 // retrieve the model data
                 PlateModel model = ((PlateElementControl)uc).Model;
                 Model.AddPlate(model);
+
             }
 
             // Notify the system of the changes
@@ -354,8 +547,6 @@ namespace FlitchPlateCalculator.Views
 
                     // and set up the events to handle recalculations
                     AddPlateControlEvents(uc);
- //                   ((PlateElementControl)uc).OnControlModified += RecreateViewModel;
-//                    ((PlateElementControl)uc).OnRemovePlateControl += RemovePlateControl;
 
                     break;
                 }
@@ -380,7 +571,6 @@ namespace FlitchPlateCalculator.Views
 
             UserControl uc = new PlateElementControl(copy_model);
             AddPlateControlEvents(uc);
-
             spSteelControls.Children.Add(uc);
 
             // recreate the view model and render it
@@ -413,12 +603,7 @@ namespace FlitchPlateCalculator.Views
             // add the control to the layout
             UserControl uc = new PlateElementControl(new_model);
             AddPlateControlEvents(uc);
-            //((PlateElementControl)uc).OnControlModified += RecreateViewModel;
-            //((PlateElementControl)uc).OnRemovePlateControl += RemovePlateControl;
-            //((PlateElementControl)uc).OnPlateModelChanged += UpdatePlateModel;
-
             spSteelControls.Children.Add(uc);
-
 
             OnUserUpdate();
         }
@@ -437,7 +622,7 @@ namespace FlitchPlateCalculator.Views
             PlateModel p2 = new PlateModel(8, 0.435, new Point(0, -3.7825), MaterialTypes.MATERIAL_STEEL);
             model.AddPlate(p2);
 
-            PlateModel p3 = new PlateModel(0.285, 7.13, new Point(0, 0), MaterialTypes.MATERIAL_STEEL);
+            PlateModel p3 = new PlateModel(0.285, 7.12, new Point(0, 0), MaterialTypes.MATERIAL_STEEL);
             model.AddPlate(p3);
 
             return model;

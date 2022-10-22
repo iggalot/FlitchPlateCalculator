@@ -10,6 +10,7 @@ namespace FlitchPlateCalculator.ViewModels
 {
     public class FlitchPlateViewModel : BaseVieWModel
     {
+        private string _status_message = "";
         public FlitchPlateModel Model { get; set; }
         public Canvas FPCanvas { get; set; }
 
@@ -53,6 +54,14 @@ namespace FlitchPlateCalculator.ViewModels
         public double HOR_BOTTOM { get => Math.Round(Model.BB_p1_WORLD.Y, 3); }
         public double VER_LEFT { get => Math.Round(Model.BB_p1_WORLD.X, 3); }
         public double VER_RIGHT { get => Math.Round(Model.BB_p2_WORLD.X, 3); }
+
+        public string StatusMessage { get=>_status_message;
+            set
+            {
+                _status_message = value;
+                OnPropertyChanged("StatusMessage");
+            }
+        }
 
 
 
@@ -257,6 +266,8 @@ namespace FlitchPlateCalculator.ViewModels
             OnPropertyChanged("HOR_BOTTOM");
             OnPropertyChanged("VER_LEFT");
             OnPropertyChanged("VER_RIGHT");
+
+            OnPropertyChanged("StatusMessage");
         }
 
         /// <summary>

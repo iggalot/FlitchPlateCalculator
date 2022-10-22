@@ -5,42 +5,42 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:FlitchPlateCalculator.Controls"
              mc:Ignorable="d"
-             Loaded="OnPlateControlLoaded"
-             >
-    <StackPanel Orientation="Horizontal" Background="AntiqueWhite" VerticalAlignment="Top">
-        <Label Content="Qty: " Height="30"/>
-        <TextBlock Name="tb_Qty" Text="{Binding Path=Qty, Mode=OneWay}" VerticalAlignment="Center"/>
+             Loaded="OnPlateControlLoaded">
+    <StackPanel Orientation="Horizontal">
+        <StackPanel Name="spMainPlate" Margin="5" Orientation="Horizontal" Background="AntiqueWhite" VerticalAlignment="Top">
+            <TextBlock Name="tb_ID" Text="{Binding Path=ID, Mode=OneWay}" VerticalAlignment="Center" FontWeight="Bold"/>
 
-        <Label Content="Grade: " Height="30"/>
-        <TextBlock Name="tblk_Grade" Text="{Binding Path=PlateMaterialType, Mode=OneWay}" Height="30" Width="170" VerticalAlignment="Center"/>
-        <ComboBox Name="cmbGrade" Margin="5" Width="170" HorizontalAlignment="Center" Visibility="Collapsed"/>
+            <Label Content="Grade: " Height="30"/>
+            <TextBlock Name="tblk_Grade" Text="{Binding Path=PlateMaterialType, Mode=OneWay}" TextAlignment="Center"  Height="20" Width="170" VerticalAlignment="Center"/>
+            <ComboBox Name="cmbGrade" Margin="5" Width="170" HorizontalAlignment="Center" Visibility="Collapsed"/>
 
-        <Label Content="W: " Height="30"/>
-        <TextBlock Name="tblk_Width" Text="{Binding Path=PlateWidth, Mode=OneWay}" Height="30" Width="30" VerticalAlignment="Center"/>
-        <TextBox Name="tb_Width" Text="{Binding Path=PlateWidth, Mode=OneWay}" Visibility="Collapsed" Height="30" Width="35" BorderThickness="0" VerticalAlignment="Center"/>
-        <Label Content="in." Height="30"/>
+            <Label Content="W: " Height="30"/>
+            <TextBlock Name="tblk_Width" Text="{Binding Path=PlateWidth, Mode=OneWay}" Height="20" Width="30" VerticalAlignment="Center"/>
+            <TextBox Name="tb_Width" Text="{Binding Path=PlateWidth, Mode=OneWay}" Visibility="Collapsed" Height="20" Width="35" BorderThickness="0" VerticalAlignment="Center"/>
+            <Label Content="in." Height="30"/>
 
-        <Label Content="H:" Height="30"/>
-        <TextBlock Name="tblk_Height" Text="{Binding Path=PlateHeight, Mode=OneWay}" Height="30" Width="35" VerticalAlignment="Center"/>
-        <TextBox Name="tb_Height" Text="{Binding Path=PlateHeight, Mode=OneWay}" Visibility="Collapsed" Height="30" Width="35" BorderThickness="0" VerticalAlignment="Center"/>
-        <Label Content="in." Height="30"/>
+            <Label Content="H:" Height="30"/>
+            <TextBlock Name="tblk_Height" Text="{Binding Path=PlateHeight, Mode=OneWay}" Height="20" Width="35" VerticalAlignment="Center"/>
+            <TextBox Name="tb_Height" Text="{Binding Path=PlateHeight, Mode=OneWay}" Visibility="Collapsed" Height="20" Width="35" BorderThickness="0" VerticalAlignment="Center"/>
+            <Label Content="in." Height="30"/>
 
-        <Label Content="Xi" Height="30"/>
-        <TextBlock Name="tblk_Xi" Text="{Binding Path=Centroid_X, Mode=OneWay}" Height="30" Width="40" VerticalAlignment="Center"/>
-        <TextBox Name="tb_Xi" Text="{Binding Path=Centroid_X, Mode=OneWay}" Visibility="Collapsed" Height="30" Width="40" BorderThickness="0" VerticalAlignment="Center"/>
-        <Label Content="in." Height="30"/>
+            <Label Content="Xi" Height="30"/>
+            <TextBlock Name="tblk_Xi" Text="{Binding Path=Centroid_X, Mode=OneWay}" Height="20" Width="40" VerticalAlignment="Center"/>
+            <TextBox Name="tb_Xi" Text="{Binding Path=Centroid_X, Mode=OneWay}" Visibility="Collapsed" Height="20" Width="40" BorderThickness="0" VerticalAlignment="Center"/>
+            <Label Content="in." Height="30"/>
 
-        <Label Content="Yi" Height="30"/>
-        <TextBlock Name="tblk_Yi" Text="{Binding Path=Centroid_Y, Mode=OneWay}" Height="30" Width="40" VerticalAlignment="Center"/>
-        <TextBox Name="tb_Yi" Text="{Binding Path=Centroid_Y, Mode=OneWay}" Visibility="Collapsed" Height="30" Width="40" BorderThickness="0" VerticalAlignment="Center"/>
-        <Label Content="in." Height="30"/>
-
-        <Button Name="btnRotate" Content="Rotate Plate" Click="Button_RotateClick" Height="30" Width="40" HorizontalAlignment="Right"></Button>
-        <Button Name="btnCopy" Content="Copy" Click="ButtonCopy_Click" Height="30" Width="40" HorizontalAlignment="Right"/>
-        <Button Name="btnEdit" Content="Edit" Click="ButtonEdit_Click" Height="30" Width="40" HorizontalAlignment="Right"/>
-        <Button Name="btnSave" Content="Save" Background="LightGreen" Visibility="Collapsed" Click="ButtonSave_Click" Height="30" Width="40" HorizontalAlignment="Right"/>
-        <Button Name="btnCancel" Content="Cancel" Background="LightGreen" Visibility="Collapsed" Click="ButtonCancel_Click" Height="30" Width="40" HorizontalAlignment="Right"/>
-
-        <Button Name="btnDelete" Content="Delete" Height="30" Click="Button_DeletePlateClick" Width="40" HorizontalAlignment="Right"/>
+            <Label Content="Yi" Height="30"/>
+            <TextBlock Name="tblk_Yi" Text="{Binding Path=Centroid_Y, Mode=OneWay}" Height="20" Width="40" VerticalAlignment="Center"/>
+            <TextBox Name="tb_Yi" Text="{Binding Path=Centroid_Y, Mode=OneWay}" Visibility="Collapsed" Height="20" Width="40" BorderThickness="0" VerticalAlignment="Center"/>
+            <Label Content="in." Height="30"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Name="btnRotate" Content="Rotate Plate" Click="Button_RotateClick" Height="30" Width="40" HorizontalAlignment="Right"></Button>
+            <Button Name="btnCopy" Content="Copy" Click="ButtonCopy_Click" Height="30" Width="40" HorizontalAlignment="Right"/>
+            <Button Name="btnEdit" Content="Edit" Click="ButtonEdit_Click" Height="30" Width="40" HorizontalAlignment="Right"/>
+            <Button Name="btnSave" Content="Save" Background="LightGreen" Visibility="Collapsed" Click="ButtonSave_Click" Height="30" Width="40" HorizontalAlignment="Right"/>
+            <Button Name="btnCancel" Content="Cancel" Background="LightGreen" Visibility="Collapsed" Click="ButtonCancel_Click" Height="30" Width="40" HorizontalAlignment="Right"/>
+            <Button Name="btnDelete" Content="Delete" Height="30" Click="Button_DeletePlateClick" Width="40" HorizontalAlignment="Right"/>
+        </StackPanel>
     </StackPanel>
 </UserControl>

@@ -50,7 +50,7 @@
                             <Button Content="Add New Plate" FontWeight="Bold" Width="100" Height="28" Click="Button_NewPlateClick"/>
                         </StackPanel>
 
-                        <TextBlock Background="White" Margin="5" HorizontalAlignment="Center" Height="100" Text="STEEL STATUS NOTES" Width="600"/>
+                        <TextBlock Name="tblk_StatusNotes" Text="{Binding StatusMessage}" Background="White" Margin="5" HorizontalAlignment="Center" Height="100" Width="600"/>
                     </StackPanel>
 
                     <!--Wood-->
