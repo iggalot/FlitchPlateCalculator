@@ -6,6 +6,13 @@ namespace FlitchPlateCalculator.Models
 {
     public class FlitchPlateModel
     {
+        // Dimensional extents of the bounding box
+        public Point BB_p1_WORLD { get; set; }
+
+        // Minimum extents of the bounding box
+        public Point BB_p2_WORLD { get; set; }
+
+        #region Properties
         /// <summary>
         /// Plates of the assembly
         /// </summary>
@@ -16,30 +23,45 @@ namespace FlitchPlateCalculator.Models
         /// </summary>
         public Point Centroid_Untransformed { get; set; }
 
+        /// <summary>
+        /// Untransformed composite area
+        /// </summary>
         public double Area_Untransformed { get; set; }
 
+        /// <summary>
+        /// Untransformed composite moment of inertia
+        /// </summary>
         public double Ix_Untr { get; set; }
         public double Iy_Untr { get; set; }
         
+        /// <summary>
+        /// Weight
+        /// </summary>
         public double Weight { get; set; }
+
+        /// <summary>
+        /// Elastic Section Modulii
+        /// </summary>
         public double Sy_Right_Untr { get; set; }
         public double Sy_Left_Untr { get; set; }
         public double Sx_Bot_Untr { get; set; }
         public double Sx_Top_Untr { get; set; }
 
+        /// <summary>
+        /// Radii of gyration
+        /// </summary>
         public double rx_Untr { get; set; }
         public double ry_Untr { get; set; }
 
+        /// <summary>
+        /// Plastic Section Modulii
+        /// </summary>
         public double Zx_Untr { get; set; }
         public double Zy_Untr { get; set; }
 
+        #endregion
 
-        // Minimum extents of the bounding box
-        public Point BB_p1_WORLD { get; set; }
-
-        // Minimum extents of the bounding box
-        public Point BB_p2_WORLD { get; set; }
-
+        #region Constructor
         /// <summary>
         /// default constructor
         /// </summary>
@@ -47,7 +69,24 @@ namespace FlitchPlateCalculator.Models
         {
             UpdateCalculations();
         }
+        #endregion
 
+        /// <summary>
+        /// Main function to call to update all of the calculations
+        /// </summary>
+        public void UpdateCalculations()
+        {
+            FindBoundingBox_Untransformed_World();
+            CalculateCentroid_Untransformed();
+            CalculateTotalArea_Untransformed();
+            CalculateInertia_Untransformed();
+            CalculateRadiusOfGyration_Untransformed();
+            CalculateElasticSectionModulii_Untransformed();
+            CalculatePlasticSectionModulii_Untransformed();
+            CalculateWeight();
+        }
+
+        #region Plate Manipulations Methods
         /// <summary>
         /// Add a plate to the assembly at a specified location and orientation.
         /// </summary>
@@ -56,44 +95,75 @@ namespace FlitchPlateCalculator.Models
         /// <param name="point"></param>
         public void AddPlate(PlateModel plate)
         {
-            Plates.Add(plate);
-            UpdateCalculations();
+            if(plate != null)
+            {
+                Plates.Add(plate);
+                UpdateCalculations();
+            }
         }
+
+        public void CreatePlateCopy(PlateModel plate)
+        {
+            if (plate != null)
+            {
+                AddPlate(plate);
+                UpdateCalculations();
+            }
+        }
+
 
         /// <summary>
         /// Remove a plate from the assembly
         /// </summary>
         /// <param name="id"></param>
-        
-        public void RemovePlate(int id)
+        public void RemovePlate(PlateModel plate)
         {
-            for (int i = 0; i < Plates.Count; i++)
+            if (plate != null)
             {
-                if(Plates[i].Id == id)
+                for (int i = 0; i < Plates.Count; i++)
                 {
-                    Plates.RemoveAt(i);
-                    UpdateCalculations();
-                    return;
+                    if (Plates[i].Id == plate.Id)
+                    {
+                        Plates.RemoveAt(i);
+                        UpdateCalculations();
+                        return;
+                    }
                 }
+
+                MessageBox.Show("Plate #" + plate.Id + " is not a member of this flitch assembly.");
+                return;
             }
-
-            MessageBox.Show("Plate #" + id + " is not a member of this flitch assembly.");
-            return;
         }
 
-        public void UpdateCalculations()
+        /// <summary>
+        /// Rotates the specified plate in the assembly by swapping the height and width dimension
+        /// </summary>
+        /// <param name="plate"></param>
+        public void RotatePlate(PlateModel plate)
         {
-            CalculateCentroid_Untransformed();
-            CalculateTotalArea_Untransformed();
-            CalculateInertia_Untransformed();
-            CalculateRadiusOfGyration_Untransformed();
+            if (plate != null)
+            {
+                for (int i = 0; i < Plates.Count; i++)
+                {
+                    if (Plates[i].Id == plate.Id)
+                    {
+                        double temp;
+                        temp = Plates[i].Width;
+                        Plates[i].Width = Plates[i].Height;
+                        Plates[i].Height = temp;
 
-            CalculateElasticSectionModulii_Untransformed();
-            CalculatePlasticSectionModulii_Untransformed();
-            
-            CalculateWeight();
+                        UpdateCalculations();
+                        return;
+                    }
+                }
+
+                MessageBox.Show("Plate #" + plate.Id + " is not a member of this flitch assembly.");
+                return;
+            }
         }
+        #endregion
 
+        #region Engineering Calculation Methods
         private void CalculateWeight()
         {
             double wt = 0;
@@ -144,7 +214,7 @@ namespace FlitchPlateCalculator.Models
         }
 
         /// <summary>
-        /// Calculates the untransformed (gross) moments of inertia for the plate
+        /// Calculates the untransformed (gross) moments of inertia for the assembly
         /// </summary>
         private void CalculateInertia_Untransformed()
         {
@@ -162,6 +232,9 @@ namespace FlitchPlateCalculator.Models
             return;
         }
 
+        /// <summary>
+        /// Calculates the untransformed (gross) radii of gyration for the assembly
+        /// </summary>
         private void CalculateRadiusOfGyration_Untransformed()
         {
             if(Area_Untransformed == 0)
@@ -176,6 +249,9 @@ namespace FlitchPlateCalculator.Models
             }
         }
 
+        /// <summary>
+        /// Calculates the untransformed (gross) elastic section modulii for the assembly
+        /// </summary>
         private void CalculateElasticSectionModulii_Untransformed()
         {
             double top = Math.Abs(BB_p2_WORLD.Y - Centroid_Untransformed.Y);
@@ -189,6 +265,9 @@ namespace FlitchPlateCalculator.Models
             Sy_Right_Untr = Iy_Untr / right;
         }
 
+        /// <summary>
+        /// Calculates the untransformed (gross) plastic section modulii for the assembly
+        /// </summary>
         private void CalculatePlasticSectionModulii_Untransformed()
         {
             double top = Math.Abs(BB_p2_WORLD.Y - Centroid_Untransformed.Y);
@@ -264,10 +343,7 @@ namespace FlitchPlateCalculator.Models
 
         }
 
-        public void Update()
-        {
-            UpdateCalculations();
-        }
+        #endregion
 
         public override string ToString()
         {
@@ -284,41 +360,51 @@ namespace FlitchPlateCalculator.Models
             str += "\nSy_left_untr: " + Sy_Left_Untr.ToString() + " in^4";
             str += "\nSy_right_untr: " + Sy_Right_Untr.ToString() + " in^4";
 
-
             return str;
         }
-
 
         /// <summary>
         /// Find the extreme limits of the objects in world space
         /// </summary>
         public void FindBoundingBox_Untransformed_World()
         {
-            double min_x = 0;
-            double min_y = 0;
-            double max_x = 0;
-            double max_y = 0;
+            double min_x=0;
+            double min_y=0;
+            double max_x=0;
+            double max_y=0;
 
-            foreach (PlateModel plate in Plates)
+            // Large values to ensure that the first one is the smallest.
+            if (Plates.Count > 0)
             {
-                if (plate.Centroid.X - 0.5 * plate.Width < min_x)
-                {
-                    min_x = plate.Centroid.X - 0.5 * plate.Width;
-                }
+                // min values set large
+                min_x = 1000000;
+                min_y = 1000000;
 
-                if (plate.Centroid.Y - 0.5 * plate.Height < min_y)
-                {
-                    min_y = plate.Centroid.Y - 0.5 * plate.Height;
-                }
+                // max values set small
+                max_x = -1000000;
+                max_y = -1000000;
 
-                if (plate.Centroid.X + 0.5 * plate.Width > max_x)
+                foreach (PlateModel plate in Plates)
                 {
-                    max_x = plate.Centroid.X + 0.5 * plate.Width;
-                }
+                    if (plate.Centroid.X - 0.5 * plate.Width < min_x)
+                    {
+                        min_x = plate.Centroid.X - 0.5 * plate.Width;
+                    }
 
-                if (plate.Centroid.Y + 0.5 * plate.Height > max_y)
-                {
-                    max_y = plate.Centroid.Y + 0.5 * plate.Height;
+                    if (plate.Centroid.Y - 0.5 * plate.Height < min_y)
+                    {
+                        min_y = plate.Centroid.Y - 0.5 * plate.Height;
+                    }
+
+                    if (plate.Centroid.X + 0.5 * plate.Width > max_x)
+                    {
+                        max_x = plate.Centroid.X + 0.5 * plate.Width;
+                    }
+
+                    if (plate.Centroid.Y + 0.5 * plate.Height > max_y)
+                    {
+                        max_y = plate.Centroid.Y + 0.5 * plate.Height;
+                    }
                 }
             }
 

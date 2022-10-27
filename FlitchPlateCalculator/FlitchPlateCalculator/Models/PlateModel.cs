@@ -47,8 +47,9 @@ namespace FlitchPlateCalculator.Models
         /// <param name="width">Horizonal dimension</param>
         /// <param name="height">Vertical dimension</param>
         /// <param name="point">Centroid position</param>
-        public PlateModel(double width, double height, Point point, MaterialTypes mat_type = MaterialTypes.MATERIAL_STEEL)
+        public PlateModel(int id, double width, double height, Point point, MaterialTypes mat_type = MaterialTypes.MATERIAL_STEEL)
         {
+            Id = id;
             Material = new MaterialModel(mat_type);
 
             Width = width;
@@ -92,13 +93,7 @@ namespace FlitchPlateCalculator.Models
             }
         }
 
-        public void RotatePlate()
-        {
-            double temp;
-            temp = Width;
-            Width = Height;
-            Height = temp;
-        }
+
 
         /// <summary>
         /// Compares this plate model to another plate model, returning true is dimensions are the same

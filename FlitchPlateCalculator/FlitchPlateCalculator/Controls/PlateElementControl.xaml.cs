@@ -1,21 +1,10 @@
 ﻿using FlitchPlateCalculator.Models;
-using FlitchPlateCalculator.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace FlitchPlateCalculator.Controls
 {
@@ -24,9 +13,6 @@ namespace FlitchPlateCalculator.Controls
     /// </summary>
     public partial class PlateElementControl : UserControl, INotifyPropertyChanged
     {
-        private static int _id = 0;
-
-        public int ID { get; set; }
 
         // Create the OnPropertyChanged method to raise the event
         // The calling member's name will be used as the parameter.
@@ -34,25 +20,21 @@ namespace FlitchPlateCalculator.Controls
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
-
-        // the current model information
-        public PlateModel Model { get; set; }
-
-        // stores the OldModel information
-        public PlateModel OldModel { get; set; }
-
         public event PropertyChangedEventHandler PropertyChanged;
 
+        #region Properties
+        // the current model information
+        public PlateModel Model { get; set; }
+        // stores the OldModel information
+        public PlateModel OldModel { get; set; }
+        public int Id { get => Model.Id; }
         public int Qty { get => 1; }
-
         public MaterialTypes PlateMaterialType { get => Model.Material.MaterialType; }
-
         public double Centroid_X { get => Model.Centroid.X; }
         public double Centroid_Y { get => Model.Centroid.Y; }
-
         public double PlateWidth { get => Model.Width; }
         public double PlateHeight { get => Model.Height; }
-
+        #endregion
 
         ObservableCollection<string> ocSteelGrades = new ObservableCollection<string> { "A36", "A992" };
         ObservableCollection<string> ocSteelThickness = new ObservableCollection<string> { "PL 1/8", "PL 3/16", "PL 1/4", "PL 5/16", "PL 3/8", "PL 7/16", "PL 1/2", "PL 5/8", "PL 3/4", "PL 7/8", "PL 1", "PL 1-1/4", "PL 1-1/2", "PL 2" };
@@ -60,22 +42,13 @@ namespace FlitchPlateCalculator.Controls
         ObservableCollection<string> ocWoodNominalSize = new ObservableCollection<string> { "2x4", "2x6", "2x8", "2x10", "2x12" };
         ObservableCollection<string> ocWoodLVLSize = new ObservableCollection<string> { "9.5", "11.875", "14", "16", "18.75", "23.875" };
 
-        ObservableCollection<int> ocSteelQty = new ObservableCollection<int> { 1, 2, 3, 4 };
-        ObservableCollection<int> ocWoodQty = new ObservableCollection<int> { 1, 2, 3, 4 };
-
         public PlateElementControl(PlateModel model)
         {
             // set and ID marker for the control
-            ID = _id;
-            _id++;
-
             InitializeComponent();
 
             Model = model;
-            Model.Id = ID;
-
             OldModel = model;
-            OldModel.Id = ID;
 
             DataContext = this;
 
@@ -125,6 +98,7 @@ namespace FlitchPlateCalculator.Controls
         /// </summary>
         public void Update()
         {
+            OnPropertyChanged("Id");
             OnPropertyChanged("Qty");
             OnPropertyChanged("Centroid_X");
             OnPropertyChanged("Centroid_Y");
@@ -136,13 +110,85 @@ namespace FlitchPlateCalculator.Controls
             RaiseEvent(new RoutedEventArgs(PlateElementControl.OnControlModifiedEvent));
         }
 
+        /// <summary>
+        /// Validates user input and returns a PlateModel
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        private bool ValidateInput(out PlateModel model)
+        {
+            bool isValid = true;
 
-        // create an event to notify the parent that something has changed
+            double width = 0, height = 0, xi = 0, yi = 0;
+            MaterialTypes material_type = MaterialTypes.MATERIAL_UNDEFINED;
+
+            double result;
+            if (double.TryParse(tb_Width.Text, out result) is false)
+            {
+                isValid = false;
+            }
+            else
+            {
+                width = result;
+            }
+
+            if (double.TryParse(tb_Height.Text, out result) is false)
+            {
+                isValid = false;
+            }
+            else
+            {
+                height = result;
+            }
+
+            if (double.TryParse(tb_Xi.Text, out result) is false)
+            {
+                isValid = false;
+            }
+            else
+            {
+                xi = result;
+            }
+
+            if (double.TryParse(tb_Yi.Text, out result) is false)
+            {
+                isValid = false;
+            }
+            else
+            {
+                yi = result;
+            }
+
+            MaterialTypes mat_result;
+            if (Enum.TryParse<MaterialTypes>(cmbGrade.SelectedItem.ToString(), out mat_result) is false)
+            {
+                isValid = false;
+            }
+            else
+            {
+                material_type = mat_result;
+            }
+
+            if (isValid is true)
+            {
+                model = new PlateModel(Id, width, height, new Point(xi, yi), material_type);
+            }
+            else
+            {
+                model = Model;
+            }
+
+            return isValid;
+        }
+
+        #region Button control events
+
+        // create events to notify the parent that something has changed
         public static readonly RoutedEvent OnControlModifiedEvent = EventManager.RegisterRoutedEvent("UpdateModelRequired", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(PlateElementControl));
         public static readonly RoutedEvent OnRemovePlateControlEvent = EventManager.RegisterRoutedEvent("DeletePlateControl", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(PlateElementControl));
         public static readonly RoutedEvent OnPlateModelChangedEvent = EventManager.RegisterRoutedEvent("PlateModelChanged", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(PlateElementControl));
         public static readonly RoutedEvent OnCopyPlateModelEvent = EventManager.RegisterRoutedEvent("CopyPlateControl", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(PlateElementControl));
-
+        public static readonly RoutedEvent OnRotatePlateModelEvent = EventManager.RegisterRoutedEvent("RotatePlateModel", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(PlateElementControl));
 
         // expose our event
         public event RoutedEventHandler OnRemovePlateControl
@@ -153,9 +199,6 @@ namespace FlitchPlateCalculator.Controls
                 RemoveHandler(OnRemovePlateControlEvent, value);
             }
         }
-
-
-        // expose our event
         public event RoutedEventHandler OnControlModified
         {
             add { AddHandler(OnControlModifiedEvent, value); }
@@ -164,8 +207,6 @@ namespace FlitchPlateCalculator.Controls
                 RemoveHandler(OnControlModifiedEvent, value);
             }
         }
-
-        // expose our event
         public event RoutedEventHandler OnPlateModelChanged
         {
             add { AddHandler(OnPlateModelChangedEvent, value); }
@@ -174,8 +215,6 @@ namespace FlitchPlateCalculator.Controls
                 RemoveHandler(OnPlateModelChangedEvent, value);
             }
         }
-
-        // expose our event
         public event RoutedEventHandler OnCopyPlateModel
         {
             add { AddHandler(OnCopyPlateModelEvent, value); }
@@ -184,11 +223,20 @@ namespace FlitchPlateCalculator.Controls
                 RemoveHandler(OnCopyPlateModelEvent, value);
             }
         }
+        public event RoutedEventHandler OnRotatePlateModel
+        {
+            add { AddHandler(OnRotatePlateModelEvent, value); }
+            remove
+            {
+                RemoveHandler(OnRotatePlateModelEvent, value);
+            }
+        }
+        #endregion
 
-
+        #region Button Click Events
         private void Button_RotateClick(object sender, RoutedEventArgs e)
         {
-            Model.RotatePlate();
+            RaiseEvent(new RoutedEventArgs(PlateElementControl.OnRotatePlateModelEvent));
             Update();
         }
 
@@ -307,73 +355,8 @@ namespace FlitchPlateCalculator.Controls
             Update();
         }
 
-        /// <summary>
-        /// Validates user input and returns a PlateModel
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        private bool ValidateInput(out PlateModel model)
-        {
-            bool isValid = true;
+        #endregion
 
-            double width = 0, height = 0, xi = 0, yi = 0;
-            MaterialTypes material_type = MaterialTypes.MATERIAL_UNDEFINED;
 
-            double result;
-            if(double.TryParse(tb_Width.Text, out result) is false)
-            {
-                isValid = false;                
-            } else
-            {
-                width = result;
-            }
-
-            if (double.TryParse(tb_Height.Text, out result) is false)
-            {
-                isValid = false;
-            }
-            else
-            {
-                height = result;
-            }
-
-            if (double.TryParse(tb_Xi.Text, out result) is false)
-            {
-                isValid = false;
-            }
-            else
-            {
-                xi = result;
-            }
-
-            if (double.TryParse(tb_Yi.Text, out result) is false)
-            {
-                isValid = false;
-            }
-            else
-            {
-                yi = result;
-            }
-
-            MaterialTypes mat_result;
-            if(Enum.TryParse<MaterialTypes>(cmbGrade.SelectedItem.ToString(), out mat_result) is false)
-            {
-                isValid = false;
-            }
-            else
-            {
-                material_type = mat_result;
-            }
-
-            if(isValid is true)
-            {
-                model = new PlateModel(width, height, new Point(xi, yi), material_type);
-            } else
-            {
-                model = Model;
-            }
-
-            return isValid;
-        }
     }
 }

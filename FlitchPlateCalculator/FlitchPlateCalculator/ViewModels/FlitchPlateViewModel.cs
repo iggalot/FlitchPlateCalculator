@@ -11,22 +11,19 @@ namespace FlitchPlateCalculator.ViewModels
     public class FlitchPlateViewModel : BaseVieWModel
     {
         private string _status_message = "";
+
+        /// <summary>
+        /// The flith plate model object for this view model
+        /// </summary>
         public FlitchPlateModel Model { get; set; }
+
+        /// <summary>
+        /// The canvas this flitch plate view model is associated with
+        /// </summary>
         public Canvas FPCanvas { get; set; }
 
-        //// Minimum extents of the bounding box
-        //public Point BB_p1_WORLD { get; set; }
-
-        //// Minimum extents of the bounding box
-        //public Point BB_p2_WORLD { get; set; }
-
-        // Minimum extents of the bounding box
-        public Point BB_p1_SCREEN { get; set; }
-
-        // Minimum extents of the bounding box
-        public Point BB_p2_SCREEN { get; set; }
-
-
+        
+        #region Bindings into Model
         /// <summary>
         /// Properties for binding into the model data
         /// </summary>
@@ -40,22 +37,15 @@ namespace FlitchPlateCalculator.ViewModels
 
         public double rx_Untr { get => Model.rx_Untr; }
         public double ry_Untr { get => Model.ry_Untr; }
-
         public double Sx_Top_Untr { get => Model.Sx_Top_Untr; }
         public double Sx_Bot_Untr { get => Model.Sx_Bot_Untr; }
         public double Sy_Left_Untr { get => Model.Sy_Left_Untr; }
         public double Sy_Right_Untr { get => Model.Sy_Right_Untr; }
-
-
         public double Centroid_X_Untr { get => Model.Centroid_Untransformed.X; }
         public double Centroid_Y_Untr { get => Model.Centroid_Untransformed.Y; }
-
-        public double HOR_TOP { get => Math.Round(Model.BB_p2_WORLD.Y, 3); }
-        public double HOR_BOTTOM { get => Math.Round(Model.BB_p1_WORLD.Y, 3); }
-        public double VER_LEFT { get => Math.Round(Model.BB_p1_WORLD.X, 3); }
-        public double VER_RIGHT { get => Math.Round(Model.BB_p2_WORLD.X, 3); }
-
-        public string StatusMessage { get=>_status_message;
+        public string StatusMessage
+        {
+            get => _status_message;
             set
             {
                 _status_message = value;
@@ -66,7 +56,32 @@ namespace FlitchPlateCalculator.ViewModels
 
 
 
+        // Drawing limits
+        public double HOR_TOP { get => Math.Round(Model.BB_p2_WORLD.Y, 3); }
+        public double HOR_BOTTOM { get => Math.Round(Model.BB_p1_WORLD.Y, 3); }
+        public double VER_LEFT { get => Math.Round(Model.BB_p1_WORLD.X, 3); }
+        public double VER_RIGHT { get => Math.Round(Model.BB_p2_WORLD.X, 3); }
+
+        #endregion
+
+        public Point BB_p1_SCREEN { get; set; }
+
+        // Minimum extents of the bounding box
+        public Point BB_p2_SCREEN { get; set; }
+
+        // Canvas scale
         private double CANVAS_SCALE { get; set; }
+
+        #region Constructors
+        /// <summary>
+        /// default constructor
+        /// </summary>
+        /// <param name="c"></param>
+        public FlitchPlateViewModel(Canvas c)
+        {
+            Model = new FlitchPlateModel();
+            FPCanvas = c;
+        }
 
         /// <summary>
         /// Constructor
@@ -76,23 +91,21 @@ namespace FlitchPlateCalculator.ViewModels
         {
             Model = model;
             FPCanvas = c;
-
-            Update();
         }
-
+        #endregion
 
 
         /// <summary>
         /// Draws the plates to the canvas
         /// </summary>
         /// <param name="c"></param>
-        public void Draw()
+        protected void Draw()
         {
             // clear the canvas
             FPCanvas.Children.Clear();
 
-            // draw origin grid lines
-            // vertical origin line
+            // draw mid window lines
+            // vertical mid window line
             Line line = new Line();
             line.Visibility = System.Windows.Visibility.Visible;
             line.StrokeThickness = 4;
@@ -104,7 +117,7 @@ namespace FlitchPlateCalculator.ViewModels
             line.Y2 = FPCanvas.Height;
             FPCanvas.Children.Add(line);
 
-            // horizontal origin line
+            // horizontal mid window line
             line = new Line();
             line.Visibility = System.Windows.Visibility.Visible;
             line.StrokeThickness = 4;
@@ -146,7 +159,6 @@ namespace FlitchPlateCalculator.ViewModels
             // Draw composite section centroid
             DrawCentroidMarker(8);
 
-
             //// draw the bounding box
             //Line line = new Line();
             //line.Visibility = System.Windows.Visibility.Visible;
@@ -160,7 +172,7 @@ namespace FlitchPlateCalculator.ViewModels
             //FPCanvas.Children.Add(line);
         }
 
-        private void DrawCentroidMarker(double width)
+        protected void DrawCentroidMarker(double width)
         {
             double default_width1 = width;
             double width_on_screen1 = default_width1;
@@ -191,11 +203,26 @@ namespace FlitchPlateCalculator.ViewModels
         /// Computes the scale factor for a drawing canvas
         /// </summary>
         /// <param name="c"></param>
-        private void ComputeScaleFactor()
+        protected void ComputeScaleFactor()
         {
+            double scale_x = 0;
+            double scale_y = 0;
             // determine the scale factor
-            double scale_x = 0.5 * FPCanvas.Width / (Model.BB_p2_WORLD.X - Model.BB_p1_WORLD.X);
-            double scale_y = 0.5 * FPCanvas.Height / (Model.BB_p2_WORLD.Y - Model.BB_p1_WORLD.Y);
+            if ((Model.BB_p2_WORLD.X - Model.BB_p1_WORLD.X) == 0)
+            {
+                scale_x = 1;
+            } else
+            {
+                scale_x = 0.5 * FPCanvas.Width / (Model.BB_p2_WORLD.X - Model.BB_p1_WORLD.X);
+            }
+
+            if ((Model.BB_p2_WORLD.Y - Model.BB_p1_WORLD.Y) == 0)
+            {
+                scale_y = 1;
+            } else
+            {
+                scale_y = 0.5 * FPCanvas.Height / (Model.BB_p2_WORLD.Y - Model.BB_p1_WORLD.Y);
+            }
 
             CANVAS_SCALE = scale_x < scale_y ? scale_x : scale_y;
         }
@@ -230,7 +257,7 @@ namespace FlitchPlateCalculator.ViewModels
         /// Find the corresponding limits of the world bounding box on the canvas screen
         /// </summary>
         /// <param name="c"></param>
-        private void FindBoundingBox_Untransformed_Screen()
+        protected void FindBoundingBox_Untransformed_Screen()
         {
             double p1_x = Model.BB_p1_WORLD.X * CANVAS_SCALE + 0.5 * FPCanvas.Width;
             double p1_y = 0.5 * FPCanvas.Height - Model.BB_p1_WORLD.Y * CANVAS_SCALE;
@@ -244,9 +271,20 @@ namespace FlitchPlateCalculator.ViewModels
 
         public void Update()
         {
-            Model.UpdateCalculations();
-            UpdateViewFactors();
+            // If we have plates, update the calculations for the model
+            if (Model.Plates.Count > 0)
+            {
+                // update the model calculations
+                Model.UpdateCalculations();
 
+                // update the view factors for the view model
+                // Find drawing parameters
+                Model.FindBoundingBox_Untransformed_World();
+                ComputeScaleFactor();
+                FindBoundingBox_Untransformed_Screen();
+            }
+
+            // Update the calculation display
             OnPropertyChanged("Area");
             OnPropertyChanged("Weight");
             OnPropertyChanged("Ix_Untr");
@@ -261,24 +299,14 @@ namespace FlitchPlateCalculator.ViewModels
             OnPropertyChanged("Sx_Right_Untr");
             OnPropertyChanged("Sy_Top_Untr");
             OnPropertyChanged("Sy_Right_Untr");
-
             OnPropertyChanged("HOR_TOP");
             OnPropertyChanged("HOR_BOTTOM");
             OnPropertyChanged("VER_LEFT");
             OnPropertyChanged("VER_RIGHT");
-
             OnPropertyChanged("StatusMessage");
-        }
 
-        /// <summary>
-        /// Update the drawing settings
-        /// </summary>
-        private void UpdateViewFactors()
-        {
-            // Find drawing parameters
-            Model.FindBoundingBox_Untransformed_World();
-            ComputeScaleFactor();
-            FindBoundingBox_Untransformed_Screen();
+            // redraw the canvas
+            Draw();
         }
     }
 }

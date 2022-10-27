@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FlitchPlateCalculator"
         mc:Ignorable="d"
-        Title="Flitch Plate Calculator v1.0"
+        Title="Plate Section Property Calculator v1.0"
         SizeToContent="WidthAndHeight"
         Loaded="OnWindowLoaded">
     <Grid Margin="10">
@@ -81,8 +81,8 @@
                                 <TextBlock Height="24" Text="wood fb" Width="100"/>
                                 <Label Content="E" Height="28" Width="80"/>
                                 <TextBlock Height="24" Text="wood fb" Width="100"/>
-                            </StackPanel>-->
-                            <TextBlock Background="White" Margin="5" HorizontalAlignment="Center" Height="100" Text="WOOD STATUS NOTES" Width="600"/>
+                            </StackPanel>
+                            <TextBlock Background="White" Margin="5" HorizontalAlignment="Center" Height="100" Text="WOOD STATUS NOTES" Width="600"/>-->
                         </StackPanel>
 
                     </StackPanel>
@@ -114,7 +114,7 @@
             </StackPanel>
 
             <!--Results-->
-            <StackPanel>
+            <StackPanel Visibility="{Binding Path=IsValidModel, Mode=OneWay}">
                 <StackPanel Orientation="Vertical">
                     <Label Content="Section Properties" FontSize="18" FontWeight="Bold"/>
                     <StackPanel Orientation="Horizontal">

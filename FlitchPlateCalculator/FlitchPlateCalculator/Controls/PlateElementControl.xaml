@@ -8,7 +8,7 @@
              Loaded="OnPlateControlLoaded">
     <StackPanel Orientation="Horizontal">
         <StackPanel Name="spMainPlate" Margin="5" Orientation="Horizontal" Background="AntiqueWhite" VerticalAlignment="Top">
-            <TextBlock Name="tb_ID" Text="{Binding Path=ID, Mode=OneWay}" VerticalAlignment="Center" FontWeight="Bold"/>
+            <TextBlock Name="tb_ID" Text="{Binding Path=Id, Mode=OneWay}" VerticalAlignment="Center" FontWeight="Bold"/>
 
             <Label Content="Grade: " Height="30"/>
             <TextBlock Name="tblk_Grade" Text="{Binding Path=PlateMaterialType, Mode=OneWay}" TextAlignment="Center"  Height="20" Width="170" VerticalAlignment="Center"/>
