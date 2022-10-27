@@ -285,7 +285,7 @@ namespace FlitchPlateCalculator.Models
                 }
             }
 
-            return (ocOverlappedPlate.Count == 0) ? false : true;
+            return (ocOverlappedPlate.Count == 0) ? true : false;
         }
 
         public bool ValidateMaterialType()
