@@ -48,11 +48,12 @@ namespace FlitchPlateCalculator.Controls
             InitializeComponent();
 
             Model = model;
-            OldModel = model;
 
             DataContext = this;
 
             OnCreate();
+
+            Update();
         }
 
         /// <summary>
@@ -78,6 +79,8 @@ namespace FlitchPlateCalculator.Controls
             cmbGrade.VerticalAlignment = VerticalAlignment.Top;
 
             ApplyUserWarnings();
+
+            Update();
         }
 
         private void ApplyUserWarnings()
@@ -181,7 +184,7 @@ namespace FlitchPlateCalculator.Controls
             return isValid;
         }
 
-        #region Button control events
+        #region Plate Element Control events
 
         // create events to notify the parent that something has changed
         public static readonly RoutedEvent OnControlModifiedEvent = EventManager.RegisterRoutedEvent("UpdateModelRequired", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(PlateElementControl));
@@ -237,7 +240,6 @@ namespace FlitchPlateCalculator.Controls
         private void Button_RotateClick(object sender, RoutedEventArgs e)
         {
             RaiseEvent(new RoutedEventArgs(PlateElementControl.OnRotatePlateModelEvent));
-            Update();
         }
 
         private void Button_DeletePlateClick(object sender, RoutedEventArgs e)
@@ -276,15 +278,12 @@ namespace FlitchPlateCalculator.Controls
             Update();
         }
 
-
         private void ButtonCopy_Click(object sender, RoutedEventArgs e)
         {
             // Raise the event to copy the control
             RaiseEvent(new RoutedEventArgs(PlateElementControl.OnCopyPlateModelEvent));
-
-
-
         }
+
         private void ButtonEdit_Click(object sender, RoutedEventArgs e)
         {
             spMainPlate.Opacity = 1.0;
@@ -296,7 +295,6 @@ namespace FlitchPlateCalculator.Controls
             btnRotate.IsEnabled = false;
             btnDelete.IsEnabled = false;
             btnCopy.IsEnabled = false;
-
 
             tblk_Grade.Visibility = Visibility.Collapsed;
             cmbGrade.Visibility = Visibility.Visible;
@@ -314,6 +312,7 @@ namespace FlitchPlateCalculator.Controls
             tblk_Yi.Visibility = Visibility.Collapsed;
             tb_Yi.Visibility = Visibility.Visible;
 
+            Update();
 
         }
         private void ButtonSave_Click(object sender, RoutedEventArgs e)
@@ -327,7 +326,6 @@ namespace FlitchPlateCalculator.Controls
                 btnRotate.IsEnabled = true;
                 btnDelete.IsEnabled = true;
                 btnCopy.IsEnabled = true;
-
 
                 tblk_Grade.Visibility = Visibility.Visible;
                 cmbGrade.Visibility = Visibility.Collapsed;
@@ -345,14 +343,12 @@ namespace FlitchPlateCalculator.Controls
                 tblk_Yi.Visibility = Visibility.Visible;
                 tb_Yi.Visibility = Visibility.Collapsed;
 
-                OldModel = Model;
                 Model = model;
 
+                DataContext = this;
+
                 RaiseEvent(new RoutedEventArgs(PlateElementControl.OnPlateModelChangedEvent));
-
             };
-
-            Update();
         }
 
         #endregion

@@ -53,6 +53,23 @@ namespace FlitchPlateCalculator.ViewModels
             }
         }
 
+        /// <summary>
+        /// Binding to determine whether or not the results panel should be shown.
+        /// </summary>
+        public Visibility IsValidModel
+        {
+            get
+            {
+                if (Model.IsValidModel)
+                {
+                    return Visibility.Collapsed;
+                }
+                else
+                {
+                    return Visibility.Visible;
+                }
+            }
+        }
 
 
 
@@ -104,30 +121,34 @@ namespace FlitchPlateCalculator.ViewModels
             // clear the canvas
             FPCanvas.Children.Clear();
 
-            // draw mid window lines
-            // vertical mid window line
-            Line line = new Line();
-            line.Visibility = System.Windows.Visibility.Visible;
-            line.StrokeThickness = 4;
-            line.Stroke = System.Windows.Media.Brushes.DarkGray;
-            line.X1 = FPCanvas.Width * 0.5;
-            line.Y1 = 0;
+            // Draw our background grid
+            int num_grid_lines = 20;
+            for (int i = 0; i < num_grid_lines; i++)
+            {
+                // vertical grid lines
+                Line line = new Line();
+                line.Visibility = System.Windows.Visibility.Visible;
+                line.StrokeThickness = 1;
+                line.Stroke = System.Windows.Media.Brushes.DarkGray;
+                line.X1 = FPCanvas.Width * i / num_grid_lines;
+                line.Y1 = 0;
 
-            line.X2 = FPCanvas.Width * 0.5;
-            line.Y2 = FPCanvas.Height;
-            FPCanvas.Children.Add(line);
+                line.X2 = FPCanvas.Width * i / num_grid_lines;
+                line.Y2 = FPCanvas.Height;
+                FPCanvas.Children.Add(line);
 
-            // horizontal mid window line
-            line = new Line();
-            line.Visibility = System.Windows.Visibility.Visible;
-            line.StrokeThickness = 4;
-            line.Stroke = System.Windows.Media.Brushes.DarkGray;
-            line.X1 = 0;
-            line.Y1 = FPCanvas.Height * 0.5;
+                // horizontal grid lines
+                line = new Line();
+                line.Visibility = System.Windows.Visibility.Visible;
+                line.StrokeThickness = 1;
+                line.Stroke = System.Windows.Media.Brushes.DarkGray;
+                line.X1 = 0;
+                line.Y1 = FPCanvas.Height * i / num_grid_lines;
 
-            line.X2 = FPCanvas.Width;
-            line.Y2 = FPCanvas.Height * 0.5;
-            FPCanvas.Children.Add(line);
+                line.X2 = FPCanvas.Width;
+                line.Y2 = FPCanvas.Height * i / num_grid_lines;
+                FPCanvas.Children.Add(line);
+            }
 
             // Draw the plates
             foreach (PlateModel p in Model.Plates)
@@ -274,6 +295,9 @@ namespace FlitchPlateCalculator.ViewModels
             // If we have plates, update the calculations for the model
             if (Model.Plates.Count > 0)
             {
+                // Validate the model
+                Model.ValidateModel();
+
                 // update the model calculations
                 Model.UpdateCalculations();
 
@@ -285,7 +309,7 @@ namespace FlitchPlateCalculator.ViewModels
             }
 
             // Update the calculation display
-            OnPropertyChanged("Area");
+            OnPropertyChanged("Area_Untr");
             OnPropertyChanged("Weight");
             OnPropertyChanged("Ix_Untr");
             OnPropertyChanged("Iy_Untr");
@@ -295,15 +319,16 @@ namespace FlitchPlateCalculator.ViewModels
             OnPropertyChanged("Zy_Untr");
             OnPropertyChanged("rx_Untr");
             OnPropertyChanged("ry_Untr");
-            OnPropertyChanged("Sx_Left_Untr");
-            OnPropertyChanged("Sx_Right_Untr");
-            OnPropertyChanged("Sy_Top_Untr");
+            OnPropertyChanged("Sy_Left_Untr");
             OnPropertyChanged("Sy_Right_Untr");
+            OnPropertyChanged("Sx_Top_Untr");
+            OnPropertyChanged("Sx_Bot_Untr");
             OnPropertyChanged("HOR_TOP");
             OnPropertyChanged("HOR_BOTTOM");
             OnPropertyChanged("VER_LEFT");
             OnPropertyChanged("VER_RIGHT");
             OnPropertyChanged("StatusMessage");
+            OnPropertyChanged("IsValidModel");
 
             // redraw the canvas
             Draw();

@@ -50,7 +50,9 @@
                             <Button Content="Add New Plate" FontWeight="Bold" Width="100" Height="28" Click="Button_NewPlateClick"/>
                         </StackPanel>
 
-                        <TextBlock Name="tblk_StatusNotes" Text="{Binding StatusMessage}" Background="White" Margin="5" HorizontalAlignment="Center" Height="100" Width="600"/>
+                        <ScrollViewer MaxHeight="100" Width="Auto" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="10">
+                            <TextBox Name="tblk_StatusNotes" Text="{Binding StatusMessage}" Background="White" Margin="5" HorizontalAlignment="Center" Height="100" Width="600" TextWrapping="Wrap"/>
+                        </ScrollViewer>
                     </StackPanel>
 
                     <!--Wood-->
@@ -86,6 +88,107 @@
                         </StackPanel>
 
                     </StackPanel>
+
+                    <!--Results-->
+                    <StackPanel Name="spResults" Visibility="{Binding Path=IsValidModel, Mode=OneWay}">
+                        <StackPanel Orientation="Vertical">
+                            <Label Content="Section Properties" FontSize="18" FontWeight="Bold"/>
+                            <StackPanel Orientation="Horizontal">
+                                <Label Content="Weight = "/>
+                                <TextBox Text="{Binding Path=Weight, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
+                                <Label Content="lb / ft"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Vertical">
+                                <Label Content="Untransformed (gross)" FontSize="18" FontWeight="Bold"/>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="30"/>
+                                        <RowDefinition Height="30"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
+                                        <Label Content="Centroid (Xc, Yc) = ("/>
+                                        <TextBox Text="{Binding Path=Centroid_X_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
+                                        <Label Content=","/>
+                                        <TextBox Text="{Binding Path=Centroid_Y_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
+                                        <Label Content=") in.          "/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                                        <Label Content="Area = "/>
+                                        <TextBox Text="{Binding Path=Area_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
+                                        <Label Content="sq. in."/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
+                                        <Label Content="Ix = "/>
+                                        <TextBox Text="{Binding Path=Ix_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
+                                        <Label Content="in^4.           "/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                                        <Label Content="Iy = "/>
+                                        <TextBox Text="{Binding Path=Iy_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
+                                        <Label Content="in^4."/>
+                                    </StackPanel>
+
+
+                                    <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal">
+                                        <Label Content="rx = "/>
+                                        <TextBox Text="{Binding Path=rx_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
+                                        <Label Content="in.           "/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
+                                        <Label Content="ry = "/>
+                                        <TextBox Text="{Binding Path=ry_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
+                                        <Label Content="in."/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal">
+                                        <Label Content="Sx_Bot = "/>
+                                        <TextBox Text="{Binding Path=Sx_Bot_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
+                                        <Label Content="in.^3               "/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
+                                        <Label Content="Sx_Top = "/>
+                                        <TextBox Text="{Binding Path=Sx_Top_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
+                                        <Label Content="in.^3"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Row="4" Grid.Column="0" Orientation="Horizontal">
+                                        <Label Content="Sy_Left = "/>
+                                        <TextBox Text="{Binding Path=Sy_Left_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
+                                        <Label Content="in.^3               "/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
+                                        <Label Content="Sy_Right = "/>
+                                        <TextBox Text="{Binding Path=Sy_Right_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
+                                        <Label Content="in.^3"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Row="5" Grid.Column="0" Orientation="Horizontal">
+                                        <Label Content="Zx = "/>
+                                        <TextBox Text="{Binding Path=Zx_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
+                                        <Label Content="in^3.           "/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
+                                        <Label Content="Zy = "/>
+                                        <TextBox Text="{Binding Path=Zy_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
+                                        <Label Content="in^3."/>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
                 </StackPanel>
 
                 <!--Canvas Area-->
@@ -113,108 +216,7 @@
 
             </StackPanel>
 
-            <!--Results-->
-            <StackPanel Visibility="{Binding Path=IsValidModel, Mode=OneWay}">
-                <StackPanel Orientation="Vertical">
-                    <Label Content="Section Properties" FontSize="18" FontWeight="Bold"/>
-                    <StackPanel Orientation="Horizontal">
 
-                        <Label Content="Weight = "/>
-                        <TextBox Text="{Binding Path=Weight, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
-                        <Label Content="lb / ft"/>
-                    </StackPanel>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <StackPanel Orientation="Vertical">
-                        <Label Content="Untransformed (gross)" FontSize="18" FontWeight="Bold"/>
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="30"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-
-                            </Grid.ColumnDefinitions>
-
-                            <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
-                                <Label Content="Centroid (Xc, Yc) = ("/>
-                                <TextBox Text="{Binding Path=Centroid_X_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
-                                <Label Content=","/>
-                                <TextBox Text="{Binding Path=Centroid_Y_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
-                                <Label Content=") in.          "/>
-                            </StackPanel>
-                            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
-                                <Label Content="Area = "/>
-                                <TextBox Text="{Binding Path=Area_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
-                                <Label Content="sq. in."/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
-                                <Label Content="Ix = "/>
-                                <TextBox Text="{Binding Path=Ix_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
-                                <Label Content="in^4.           "/>
-                            </StackPanel>
-                            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
-                                <Label Content="Iy = "/>
-                                <TextBox Text="{Binding Path=Iy_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
-                                <Label Content="in^4."/>
-                            </StackPanel>
-
-
-                            <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal">
-                                <Label Content="rx = "/>
-                                <TextBox Text="{Binding Path=rx_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
-                                <Label Content="in.           "/>
-                            </StackPanel>
-                            <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
-                                <Label Content="ry = "/>
-                                <TextBox Text="{Binding Path=ry_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
-                                <Label Content="in."/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal">
-                                <Label Content="Sx_Bot = "/>
-                                <TextBox Text="{Binding Path=Sx_Bot_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
-                                <Label Content="in.^3               "/>
-                            </StackPanel>
-                            <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal">
-                                <Label Content="Sx_Top = "/>
-                                <TextBox Text="{Binding Path=Sx_Top_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
-                                <Label Content="in.^3"/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Row="4" Grid.Column="0" Orientation="Horizontal">
-                                <Label Content="Sy_Left = "/>
-                                <TextBox Text="{Binding Path=Sy_Left_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
-                                <Label Content="in.^3               "/>
-                            </StackPanel>
-                            <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
-                                <Label Content="Sy_Right = "/>
-                                <TextBox Text="{Binding Path=Sy_Right_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
-                                <Label Content="in.^3"/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Row="5" Grid.Column="0" Orientation="Horizontal">
-                                <Label Content="Zx = "/>
-                                <TextBox Text="{Binding Path=Zx_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
-                                <Label Content="in^3.           "/>
-                            </StackPanel>
-                            <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
-                                <Label Content="Zy = "/>
-                                <TextBox Text="{Binding Path=Zy_Untr, Mode=OneWay}" BorderThickness="0" VerticalAlignment="Center"/>
-                                <Label Content="in^3."/>
-                            </StackPanel>
-                        </Grid>
-                    </StackPanel>
-                </StackPanel>
-
-            </StackPanel>
             <TextBlock Name="tb_UIStatusBar" Background="Silver" FontWeight="Bold" Height="20" Text="UI STATUS BAR"/>
         </StackPanel>
     </Grid>
