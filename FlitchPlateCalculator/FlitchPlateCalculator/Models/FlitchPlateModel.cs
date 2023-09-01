@@ -35,6 +35,52 @@ namespace FlitchPlateCalculator.Models
         /// </summary>
         public List<PlateModel> Plates { get; set; } = new List<PlateModel>();
 
+        // Determines the number of materials in the cross section
+        public int NumberOfMaterials {
+            get
+            {
+                List<MaterialTypes> types = MaterialsUsedInAssembly;
+
+                if (types != null)
+                {
+                    return MaterialsUsedInAssembly.Count;
+                } else
+                {
+                    return - 1;
+                }
+            }
+        }
+
+        public List<MaterialTypes> MaterialsUsedInAssembly
+        {
+            get
+            {
+                List<MaterialTypes> materials = new List<MaterialTypes>();
+
+                var mat_names = Enum.GetValues(typeof(MaterialTypes));
+                int count = 0;
+                foreach (var name in mat_names)
+                {
+                    bool match_found = false;
+                    // search the plates list
+                    foreach (var model in Plates)
+                    {
+                        if (model.Material.MaterialType == (MaterialTypes)name)
+                        {
+                            match_found = true;
+                        }
+                    }
+
+                    if (match_found)
+                    {
+                        materials.Add((MaterialTypes)name);
+                    }
+                }
+
+                return materials;
+            }
+        }
+
         /// <summary>
         /// Centroid point of the composite plate
         /// </summary>

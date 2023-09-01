@@ -69,7 +69,7 @@ namespace FlitchPlateCalculator.Views
 
             // Load test models
             //LoadW8x31Test();
-            //LoadMultiMaterialTest();
+            LoadMultiMaterialTest();
 
             // Run the first time
             OnUserCreate();
@@ -134,6 +134,14 @@ namespace FlitchPlateCalculator.Views
             {
                 str += "\nOne or more materials are undefined";
                 bHasErrors = true;
+            } else
+            {
+                str += "\n" + FlitchPlateVM.Model.NumberOfMaterials + " different materials found";
+
+                foreach(var item in FlitchPlateVM.Model.MaterialsUsedInAssembly)
+                {
+                    str += "\n- " + item.ToString();
+                }
             }
 
             // check the overlap of the model
