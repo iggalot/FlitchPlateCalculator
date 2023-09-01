@@ -68,8 +68,8 @@ namespace FlitchPlateCalculator.Views
             FlitchPlateVM = new FlitchPlateViewModel(MainCanvas);
 
             // Load test models
-            //FlitchPlateVM.Model = LoadW8x31Test();
-            //FlitchPlateVM.Model = LoadMultiMaterialTest();
+            //LoadW8x31Test();
+            //LoadMultiMaterialTest();
 
             // Run the first time
             OnUserCreate();
@@ -82,7 +82,7 @@ namespace FlitchPlateCalculator.Views
         }
 
         /// <summary>
-        /// Function that first only once when the application is created.
+        /// Function that fires only once when the application is created.
         /// </summary>
         private void OnUserCreate()
         {
@@ -376,46 +376,44 @@ namespace FlitchPlateCalculator.Views
 
 
 
-        protected FlitchPlateModel LoadW8x31Test()
+        protected void LoadW8x31Test()
         {
             FlitchPlateModel model = new FlitchPlateModel();
 
             PlateModel p1 = new PlateModel(GetNextId(), 8, 0.435, new Point(0, +3.7825), MaterialTypes.MATERIAL_STEEL) ;
-            model.AddPlate(p1);
+            FlitchPlateVM.Model.AddPlate(p1);
 
             PlateModel p2 = new PlateModel(GetNextId(), 8, 0.435, new Point(0, -3.7825), MaterialTypes.MATERIAL_STEEL);
-            model.AddPlate(p2);
+            FlitchPlateVM.Model.AddPlate(p2);
 
             PlateModel p3 = new PlateModel(GetNextId(), 0.285, 7.12, new Point(0, 0), MaterialTypes.MATERIAL_STEEL);
-            model.AddPlate(p3);
-
-            return model;
+            FlitchPlateVM.Model.AddPlate(p3);
         }
 
         /// <summary>
         /// Test case for multiple materials
         /// </summary>
         /// <returns></returns>
-        protected FlitchPlateModel LoadMultiMaterialTest()
+        protected void LoadMultiMaterialTest()
         {
             FlitchPlateModel model = new FlitchPlateModel();
 
-            PlateModel p1 = new PlateModel(GetNextId(), 0.5, 2, new Point(-0.75, 0), MaterialTypes.MATERIAL_STEEL);
-            model.AddPlate(p1);
+            PlateModel p1 = new PlateModel(GetNextId(), 0.5, 2, new Point(-0.76, 0), MaterialTypes.MATERIAL_STEEL);
+            FlitchPlateVM.Model.AddPlate(p1);
 
-            PlateModel p2 = new PlateModel(GetNextId(), 0.5, 4, new Point(-0.25, 0), MaterialTypes.MATERIAL_WOOD_LVL_E2_0);
-            model.AddPlate(p2);
+            PlateModel p2 = new PlateModel(GetNextId(), 0.5, 4, new Point(-0.255, 0), MaterialTypes.MATERIAL_WOOD_LVL_E2_0);
+            FlitchPlateVM.Model.AddPlate(p2);
 
-            PlateModel p3 = new PlateModel(GetNextId(), 0.5, 4, new Point(+0.25, 0), MaterialTypes.MATERIAL_WOOD_LVL_E2_0);
-            model.AddPlate(p3);
+            PlateModel p3 = new PlateModel(GetNextId(), 0.5, 4, new Point(+0.255, 0), MaterialTypes.MATERIAL_WOOD_LVL_E2_0);
+            FlitchPlateVM.Model.AddPlate(p3);
 
-            PlateModel p4 = new PlateModel(GetNextId(), 0.5, 2, new Point(+0.75, 0), MaterialTypes.MATERIAL_STEEL);
-            model.AddPlate(p4);
+            PlateModel p4 = new PlateModel(GetNextId(), 0.5, 2, new Point(+0.76, 0), MaterialTypes.MATERIAL_STEEL);
+            FlitchPlateVM.Model.AddPlate(p4);
 
-            PlateModel p5 = new PlateModel(GetNextId(), 4, .25, new Point(0, 2.124), MaterialTypes.MATERIAL_WOOD_SYP);
-            model.AddPlate(p5);
+            PlateModel p5 = new PlateModel(GetNextId(), 4, .25, new Point(0, 2.13), MaterialTypes.MATERIAL_WOOD_SYP);
+            FlitchPlateVM.Model.AddPlate(p5);
 
-            return model;
+            OnUserUpdate();
         }
 
 
